@@ -13,23 +13,49 @@
 
 <div class="starfield" aria-hidden="true"></div>
 
-<!-- Age gate -->
-<div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
-  <div class="age-card">
-    <p class="eyebrow">Transmission incoming</p>
-    <h2 id="ageTitle">Are you 18 or older?</h2>
-    <p>Earthy Essentials sells cannabis and related products. Please confirm your age to enter orbit.</p>
-    <div class="age-actions">
+<!-- ===================== STAGE 1: AGE VERIFICATION ===================== -->
+<section class="gate-screen" id="gateAge">
+  <div class="gate-card">
+    <p class="eyebrow">Transmission 1 of 2 — Verification</p>
+    <h1>Are you 18 or older?</h1>
+    <p>Earthy Essentials sells cannabis and related products. Please confirm your age before we let you aboard.</p>
+    <div class="gate-actions">
       <button class="btn" id="ageNo">No</button>
       <button class="btn primary" id="ageYes">Yes, I'm 18+</button>
     </div>
   </div>
-</div>
+</section>
+
+<!-- ===================== STAGE 2: MEMBERSHIP & VERIFICATION ===================== -->
+<section class="gate-screen" id="gateMember" hidden>
+  <div class="gate-card gate-card--wide">
+    <p class="eyebrow">Transmission 2 of 2 — Membership</p>
+    <h1>Join the crew</h1>
+    <p>New here? Fill in the membership form below with a valid email address. We'll verify your details and email you an access code — you'll only be let into the store once you enter that code below. Already verified? Enter your code straight away.</p>
+    <div class="form-shell">
+      <iframe title="Earthy Essentials membership form" src="https://docs.google.com/forms/d/e/1FAIpQLSfAsfx447C0TPlffLOrJy-TOYILT6onqBzKuJzFfeQH8HATkQ/viewform?embedded=true" loading="lazy">Loading…</iframe>
+    </div>
+    <div class="access-code-block">
+      <label for="accessCodeInput">Access code</label>
+      <div class="access-code-row">
+        <input type="text" id="accessCodeInput" placeholder="Enter the code from your verification email" autocomplete="off">
+        <button class="btn primary" id="accessCodeSubmit">Enter store</button>
+      </div>
+      <p class="access-code-msg" id="accessCodeMsg" hidden></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STAGE 3: STORE ===================== -->
+<div id="storeApp" hidden>
 
 <header class="site">
   <div class="wrap nav-row">
     <a class="brand" href="#top"><span class="dot"></span> Earthy Essentials</a>
-    <a class="back-link" href="/">← Indus Valley</a>
+    <nav class="header-links">
+      <a href="#learn">Garden of Balance</a>
+      <a class="back-link" href="/">← Indus Valley</a>
+    </nav>
   </div>
 </header>
 
@@ -145,9 +171,29 @@
 
   </div>
 
+  <!-- ===================== GARDEN OF BALANCE — INTERACTIVE Q&A ===================== -->
+  <section class="learn wrap" id="learn">
+    <p class="eyebrow">Transmissions from Gaia</p>
+    <h2>The Garden of Balance</h2>
+    <p class="tagline" style="margin-left:0;margin-right:0;">Pick a guide, then pick a question — they'll answer on video.</p>
+
+    <div class="avatar-tabs" id="avatarTabs" role="tablist" aria-label="Choose a guide"></div>
+
+    <div class="learn-panel">
+      <div class="video-frame">
+        <video id="learnVideo" controls playsinline hidden></video>
+        <div class="video-placeholder" id="learnPlaceholder">
+          <span class="play-dot">▶</span>
+          <p id="learnPlaceholderText">Select a question</p>
+        </div>
+      </div>
+      <div class="question-list" id="questionList" role="list"></div>
+    </div>
+  </section>
+
   <section class="membership wrap" id="membership">
-    <p class="eyebrow">Join the crew</p>
-    <h2>Become a member</h2>
+    <p class="eyebrow">Not a member yet?</p>
+    <h2>Join the crew</h2>
     <p style="color:var(--dust);max-width:48ch;margin:0 auto;">May the cannabis be with you 🖖🏾 — sign up below for membership and specials.</p>
     <div class="form-shell">
       <iframe title="Earthy Essentials membership form" src="https://docs.google.com/forms/d/e/1FAIpQLSfAsfx447C0TPlffLOrJy-TOYILT6onqBzKuJzFfeQH8HATkQ/viewform?embedded=true" loading="lazy">Loading…</iframe>
@@ -161,19 +207,181 @@
   </div>
 </footer>
 
+</div><!-- /#storeApp -->
+
 <script>
   (function(){
-    var gate = document.getElementById('ageGate');
+    var gateAge = document.getElementById('gateAge');
+    var gateMember = document.getElementById('gateMember');
+    var storeApp = document.getElementById('storeApp');
+
+    function showStore(){
+      gateAge.hidden = true;
+      gateMember.hidden = true;
+      storeApp.hidden = false;
+    }
+    function showMemberGate(){
+      gateAge.hidden = true;
+      gateMember.hidden = false;
+    }
+
+    var ageOk, memberOk;
     try{
-      if(localStorage.getItem('ee_age_ok') === '1'){ gate.hidden = true; }
-    }catch(e){}
+      ageOk = localStorage.getItem('ee_age_ok') === '1';
+      memberOk = localStorage.getItem('ee_member_ok') === '1';
+    }catch(e){ ageOk = false; memberOk = false; }
+
+    if(ageOk && memberOk){
+      showStore();
+    } else if(ageOk){
+      showMemberGate();
+    } // else: default state already shows gateAge
+
     document.getElementById('ageYes').addEventListener('click', function(){
       try{ localStorage.setItem('ee_age_ok','1'); }catch(e){}
-      gate.hidden = true;
+      showMemberGate();
     });
     document.getElementById('ageNo').addEventListener('click', function(){
       window.location.href = 'https://www.google.com';
     });
+
+    // Access codes — you issue these by email once you've manually verified a
+    // member's submitted form. Add/remove/rotate codes in this list as needed.
+    // Matching is case-insensitive and ignores surrounding spaces.
+    var VALID_ACCESS_CODES = ['EARTHY-2026'];
+
+    function tryAccessCode(){
+      var input = document.getElementById('accessCodeInput');
+      var msg = document.getElementById('accessCodeMsg');
+      var entered = (input.value || '').trim().toUpperCase();
+      var ok = VALID_ACCESS_CODES.some(function(code){ return code.toUpperCase() === entered; });
+      if(ok){
+        try{ localStorage.setItem('ee_member_ok','1'); }catch(e){}
+        showStore();
+      } else {
+        msg.hidden = false;
+        msg.textContent = "That code wasn't recognized. Make sure you've submitted the form above and wait for your verification email.";
+      }
+    }
+    document.getElementById('accessCodeSubmit').addEventListener('click', tryAccessCode);
+    document.getElementById('accessCodeInput').addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ tryAccessCode(); }
+    });
+  })();
+
+  // ===================== Garden of Balance — Q&A data =====================
+  // To add or change content: edit this object only. Each guide has a list of
+  // {q, file} pairs — q is the question text shown as a button, file is the
+  // path to that guide's video answer once you've uploaded it to /videos/.
+  // Filenames below are placeholders — upload your real .mp4 files to match
+  // these paths (or edit the paths to match your filenames).
+  var GUIDES = {
+    gaia: {
+      label: 'Gaia',
+      role: 'Host',
+      questions: [
+        { q: 'What is the Garden of Balance?', file: '/videos/gaia/what-is-the-garden.mp4' },
+        { q: 'How do I know which guide is right for me?', file: '/videos/gaia/which-guide.mp4' },
+        { q: 'Is cannabis right for a first-timer?', file: '/videos/gaia/first-timer.mp4' }
+      ]
+    },
+    indica: {
+      label: 'Indica',
+      role: 'Rest & Ease',
+      questions: [
+        { q: 'What is Indica good for?', file: '/videos/indica/what-is-indica.mp4' },
+        { q: 'Will it help me sleep?', file: '/videos/indica/sleep.mp4' },
+        { q: 'Best time of day to use it?', file: '/videos/indica/best-time.mp4' }
+      ]
+    },
+    sativa: {
+      label: 'Sativa',
+      role: 'Energy & Focus',
+      questions: [
+        { q: 'What is Sativa good for?', file: '/videos/sativa/what-is-sativa.mp4' },
+        { q: 'Can it help with focus?', file: '/videos/sativa/focus.mp4' },
+        { q: 'Best time of day to use it?', file: '/videos/sativa/best-time.mp4' }
+      ]
+    },
+    hybrid: {
+      label: 'Hybrid',
+      role: 'Balance',
+      questions: [
+        { q: 'What is a Hybrid strain?', file: '/videos/hybrid/what-is-hybrid.mp4' },
+        { q: 'How do I choose Indica- vs Sativa-leaning?', file: '/videos/hybrid/leaning.mp4' },
+        { q: 'Good for a first-time hybrid user?', file: '/videos/hybrid/first-time.mp4' }
+      ]
+    }
+  };
+
+  (function(){
+    var tabsEl = document.getElementById('avatarTabs');
+    var listEl = document.getElementById('questionList');
+    var videoEl = document.getElementById('learnVideo');
+    var placeholderEl = document.getElementById('learnPlaceholder');
+    var placeholderText = document.getElementById('learnPlaceholderText');
+    var activeGuide = 'gaia';
+
+    function renderTabs(){
+      tabsEl.innerHTML = '';
+      Object.keys(GUIDES).forEach(function(key){
+        var g = GUIDES[key];
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'avatar-tab' + (key === activeGuide ? ' active' : '');
+        btn.textContent = g.label;
+        btn.setAttribute('role','tab');
+        btn.setAttribute('aria-selected', key === activeGuide ? 'true' : 'false');
+        btn.addEventListener('click', function(){
+          activeGuide = key;
+          resetPlayer();
+          renderTabs();
+          renderQuestions();
+        });
+        tabsEl.appendChild(btn);
+      });
+    }
+
+    function renderQuestions(){
+      listEl.innerHTML = '';
+      GUIDES[activeGuide].questions.forEach(function(item){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'question-btn';
+        btn.textContent = item.q;
+        btn.addEventListener('click', function(){
+          playAnswer(item);
+        });
+        listEl.appendChild(btn);
+      });
+    }
+
+    function resetPlayer(){
+      videoEl.pause();
+      videoEl.removeAttribute('src');
+      videoEl.load();
+      videoEl.hidden = true;
+      placeholderEl.hidden = false;
+      placeholderText.textContent = 'Select a question';
+    }
+
+    function playAnswer(item){
+      placeholderText.textContent = 'Loading answer…';
+      videoEl.src = item.file;
+      videoEl.hidden = false;
+      placeholderEl.hidden = true;
+      videoEl.play().catch(function(){
+        // Autoplay may be blocked — that's fine, the controls are visible.
+      });
+      videoEl.onerror = function(){
+        videoEl.hidden = true;
+        placeholderEl.hidden = false;
+        placeholderText.textContent = 'Video coming soon';
+      };
+    }
+
+    renderTabs();
+    renderQuestions();
   })();
 </script>
 </body>
