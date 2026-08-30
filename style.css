@@ -201,6 +201,64 @@ header.site{
   }
 }
 
+/* Full-width category variant (used once real product data exists) */
+.category--full{
+  display:block;
+}
+.category--full .cat-head p{max-width:none;}
+.category--full .strain-tag{display:inline-block;margin-top:6px;}
+
+.photo-pending{
+  margin-top:20px;
+  aspect-ratio:21/8;
+  border-radius:14px;
+  border:1px dashed var(--hairline);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;color:var(--dust);
+  background:rgba(255,255,255,0.02);
+}
+.photo-pending .play-dot{border:none;font-size:1.4rem;}
+.photo-pending p{margin:0;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+
+.product-grid{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+  gap:14px;
+}
+.product-card{
+  border:1px solid var(--hairline);
+  border-radius:12px;
+  padding:16px 18px;
+  background:var(--nebula-violet);
+}
+.product-card h4{
+  font-family:var(--display);font-size:1rem;margin:0 0 4px;color:var(--starlight);
+}
+.product-card .variant{margin:0 0 6px;color:var(--dust);font-size:0.85rem;max-width:none;}
+.product-card .price{margin:0;color:var(--bio-green);font-family:var(--mono);font-size:0.85rem;max-width:none;}
+.product-card .badge{
+  display:inline-block;margin-top:8px;
+  padding:3px 12px;border-radius:100px;
+  font-family:var(--mono);font-size:0.7rem;letter-spacing:0.03em;
+  border:1px solid var(--plasma-pink-dim);color:var(--plasma-pink);
+}
+
+.strain-tag{
+  display:inline-block;
+  font-family:var(--mono);font-size:0.72rem;letter-spacing:0.06em;
+  color:var(--bio-green);border:1px solid var(--bio-green-dim);
+  padding:4px 12px;border-radius:100px;
+}
+
+.coming-soon-block{
+  margin-top:20px;
+  border:1px dashed var(--hairline);
+  border-radius:14px;
+  padding:36px;text-align:center;color:var(--dust);
+}
+.coming-soon-block p:last-child{margin:6px 0 0;max-width:none;}
+
 /* ---------------- Specials / Instore banner ---------------- */
 .specials{
   margin:24px 0 0;
