@@ -79,6 +79,22 @@ h1,h2,h3{
 
 .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px;}
 
+body::before{
+  content:"";
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:min(1100px, 140vw);
+  height:min(1100px, 140vw);
+  background-image:url('assets/logo-icon.png');
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center;
+  opacity:0.05;
+  z-index:0;
+  pointer-events:none;
+}
+
 /* ---------------- Header / nav ---------------- */
 header.site{
   position:sticky;top:0;z-index:20;
@@ -97,6 +113,7 @@ header.site{
   display:flex;align-items:center;gap:8px;
 }
 .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--bio-green);box-shadow:0 0 8px var(--bio-green);}
+.brand-mark{height:150px;width:auto;display:block;}
 .back-link{
   font-family:var(--mono);
   font-size:0.78rem;
@@ -183,7 +200,12 @@ header.site{
 }
 .category .media::after{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 60%,rgba(10,11,20,0.55));
+  background-image:
+    linear-gradient(180deg,transparent 60%,rgba(10,11,20,0.55)),
+    url('assets/logo-icon.png');
+  background-repeat:no-repeat, no-repeat;
+  background-position:0 0, bottom 10px right 10px;
+  background-size:100% 100%, 44px 44px;
 }
 .category .media img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;}
 .category .index{
@@ -215,7 +237,12 @@ header.site{
   border:1px dashed var(--hairline);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;color:var(--dust);
-  background:rgba(255,255,255,0.02);
+  background-color:rgba(255,255,255,0.02);
+  background-image:url('assets/logo-icon.png');
+  background-repeat:no-repeat;
+  background-position:bottom 10px right 10px;
+  background-size:44px 44px;
+  position:relative;
 }
 .photo-pending .play-dot{border:none;font-size:1.4rem;}
 .photo-pending p{margin:0;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
@@ -380,6 +407,8 @@ footer.site a{color:var(--bio-green);text-decoration:none;}
   background:var(--nebula-violet);
 }
 .gate-card--wide{max-width:640px;}
+.gate-logo{max-width:220px;width:60%;margin:0 auto 20px;display:block;}
+.gate-logo--small{max-width:80px;}
 .gate-card h1{font-size:1.6rem;}
 .gate-card p{color:var(--dust);font-size:0.95rem;}
 .gate-actions{display:flex;gap:12px;margin-top:24px;}
@@ -450,5 +479,6 @@ footer.site a{color:var(--bio-green);text-decoration:none;}
   transition:border-color .2s ease, transform .2s ease;
 }
 .store-card:hover{border-color:var(--bio-green);transform:translateY(-2px);}
+.store-card-icon{width:44px;height:44px;margin-bottom:10px;}
 .store-card .eyebrow{display:block;margin-bottom:6px;}
 .store-card h3{margin:0;font-size:1.05rem;}
