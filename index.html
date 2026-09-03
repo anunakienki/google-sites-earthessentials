@@ -13,20 +13,251 @@
 </head>
 <body>
 <div class="starfield" aria-hidden="true"></div>
+<div class="starfield starfield-fast" aria-hidden="true"></div>
 
-<div class="landing">
-  <p class="eyebrow">Indus Valley</p>
-  <h1>A digital mall, under construction</h1>
-  <p style="color:var(--dust);max-width:46ch;">The mall itself is being built. In the meantime, one store is already open for business.</p>
+<!-- ===================== STAGE 1: AGE VERIFICATION ===================== -->
+<section class="gate-screen" id="gateAge">
+  <div class="gate-card">
+    <img class="gate-logo" src="/assets/logo-vertical-medium.png" alt="Indus Valley">
+    <p class="eyebrow">Transmission 1 of 2 — Verification</p>
+    <h1>Are you 18 or older?</h1>
+    <p>Indus Valley hosts stores selling age-restricted products. Please confirm your age before entering the mall.</p>
+    <div class="gate-actions">
+      <button class="btn" id="ageNo">No</button>
+      <button class="btn primary" id="ageYes">Yes, I'm 18+</button>
+    </div>
+  </div>
+</section>
 
-  <div class="stores">
-    <a class="store-card" href="/earthyessentials/">
-      <img src="/assets/logo-icon-small.png" alt="" class="store-card-icon">
-      <span class="eyebrow">Now open</span>
-      <h3>Earthy Essentials →</h3>
-    </a>
+<!-- ===================== STAGE 2: MEMBERSHIP & VERIFICATION ===================== -->
+<section class="gate-screen" id="gateMember" hidden>
+  <div class="gate-card gate-card--wide">
+    <p class="eyebrow">Transmission 2 of 2 — Membership</p>
+    <h1>Join the crew</h1>
+    <p>New here? Fill in the membership form below. We'll email you a unique access code — you'll only be let into the mall once you enter it below. Already a member? Enter your code straight away.</p>
+
+    <form id="membershipForm" class="member-form">
+      <div class="form-field">
+        <label for="mfName">Full name</label>
+        <input type="text" id="mfName" name="name" required autocomplete="name">
+      </div>
+      <div class="form-field">
+        <label for="mfEmail">Email address</label>
+        <input type="email" id="mfEmail" name="email" required autocomplete="email">
+      </div>
+      <div class="form-field">
+        <label for="mfPhone">Phone number</label>
+        <input type="tel" id="mfPhone" name="phone" autocomplete="tel">
+      </div>
+
+      <fieldset class="form-field">
+        <legend>Are you 18 years or older?</legend>
+        <label class="radio-option"><input type="radio" name="ageConfirm" value="yes" required> Yes</label>
+        <label class="radio-option"><input type="radio" name="ageConfirm" value="no"> No</label>
+      </fieldset>
+      <p class="age-block-msg" id="ageBlockMsg" hidden>You must be 18 or older to join. Come back when you're 18 — see you then 🌙</p>
+
+      <label class="consent-row">
+        <input type="checkbox" id="mfConsent" required>
+        <span>I confirm I am 18 or older, the details above are accurate, and I agree to the club's <button type="button" class="linklike-inline" id="disclaimerToggle">membership terms &amp; disclaimer</button>.</span>
+      </label>
+
+      <div class="disclaimer-box" id="disclaimerBox" hidden>
+        <h4>Membership Terms &amp; Disclaimer</h4>
+        <p>This membership form is provided for the purpose of joining the Indus Valley club, granting access to Indus Valley's stores, including Earthy Essentials. By submitting this form, you confirm that you are 18 years of age or older, and that all details you have provided are true and accurate to the best of your knowledge.</p>
+        <p>Membership is intended for personal, private, and responsible use in accordance with applicable law. Indus Valley does not encourage or condone unlawful use, sale, or distribution of any product. It remains the member's responsibility to understand and comply with the laws applicable to them in their jurisdiction.</p>
+        <p>Your information is used solely to manage your membership, verify your age, and communicate with you about your membership and any associated benefits, such as your access code or promotions. It will not be sold to third parties.</p>
+        <p>Membership may be declined or revoked at the discretion of Indus Valley.</p>
+      </div>
+
+      <button type="submit" class="btn primary" id="memberSubmitBtn">Join the Club</button>
+      <p class="form-msg" id="formMsg" hidden></p>
+    </form>
+
+    <div id="membershipSuccess" hidden>
+      <p class="eyebrow">Welcome</p>
+      <h2>You're in the club 🖖</h2>
+      <p style="color:var(--dust);">Check your email for your access code, then enter it below.</p>
+    </div>
+
+    <div class="access-code-block">
+      <label for="accessCodeInput">Access code</label>
+      <div class="access-code-row">
+        <input type="text" id="accessCodeInput" placeholder="Enter the code from your verification email" autocomplete="off">
+        <button class="btn primary" id="accessCodeSubmit">Enter the mall</button>
+      </div>
+      <p class="access-code-msg" id="accessCodeMsg" hidden></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STAGE 3: MALL LANDING ===================== -->
+<div id="mallApp" hidden>
+  <div class="landing">
+    <p class="eyebrow landing-title-eyebrow">Indus Valley</p>
+    <h1>A digital mall, under construction</h1>
+    <p style="color:var(--dust);max-width:46ch;">The mall itself is being built. In the meantime, one store is already open for business.</p>
+
+    <div class="stores">
+      <a class="store-card" href="/earthyessentials/">
+        <span class="eyebrow">Now open</span>
+        <img src="/assets/logo-vertical-medium.png" alt="Earthy Essentials" class="store-card-logo">
+        <span class="store-card-cta">Enter the store <span class="store-card-arrow">→</span></span>
+      </a>
+    </div>
   </div>
 </div>
 
+<script>
+  (function(){
+    var gateAge = document.getElementById('gateAge');
+    var gateMember = document.getElementById('gateMember');
+    var mallApp = document.getElementById('mallApp');
+
+    // Paste your deployed Apps Script Web App URL here once you've set it up
+    // (see DEPLOY_INSTRUCTIONS.md). Same URL as the Earthy Essentials store page.
+    var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYl6u9whFo-Feo1aczUheKbd3rLkEs0ZjsCzrJ6P5FfqUs3s2kt-ZUOWNzQbq3-hpCgg/exec';
+
+    function showMall(){
+      gateAge.hidden = true;
+      gateMember.hidden = true;
+      mallApp.hidden = false;
+    }
+    function showMemberGate(){
+      gateAge.hidden = true;
+      gateMember.hidden = false;
+    }
+
+    var ageOk, memberOk;
+    try{
+      ageOk = localStorage.getItem('ee_age_ok') === '1';
+      memberOk = localStorage.getItem('ee_member_ok') === '1';
+    }catch(e){ ageOk = false; memberOk = false; }
+
+    if(ageOk && memberOk){
+      showMall();
+    } else if(ageOk){
+      showMemberGate();
+    } // else: default state already shows gateAge
+
+    document.getElementById('ageYes').addEventListener('click', function(){
+      try{ localStorage.setItem('ee_age_ok','1'); }catch(e){}
+      showMemberGate();
+    });
+    document.getElementById('ageNo').addEventListener('click', function(){
+      window.location.href = 'https://www.google.com';
+    });
+
+    // ---- Membership form: age-radio guard ----
+    var ageRadios = document.querySelectorAll('input[name="ageConfirm"]');
+    var ageBlockMsg = document.getElementById('ageBlockMsg');
+    var memberSubmitBtn = document.getElementById('memberSubmitBtn');
+    ageRadios.forEach(function(radio){
+      radio.addEventListener('change', function(){
+        if(radio.value === 'no' && radio.checked){
+          ageBlockMsg.hidden = false;
+          memberSubmitBtn.disabled = true;
+        } else if(radio.value === 'yes' && radio.checked){
+          ageBlockMsg.hidden = true;
+          memberSubmitBtn.disabled = false;
+        }
+      });
+    });
+
+    // ---- Disclaimer toggle ----
+    document.getElementById('disclaimerToggle').addEventListener('click', function(){
+      var box = document.getElementById('disclaimerBox');
+      box.hidden = !box.hidden;
+    });
+
+    // ---- Membership form submit ----
+    document.getElementById('membershipForm').addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var formMsg = document.getElementById('formMsg');
+      formMsg.hidden = true;
+
+      var ageValue = document.querySelector('input[name="ageConfirm"]:checked');
+      if(!ageValue || ageValue.value !== 'yes'){
+        formMsg.hidden = false;
+        formMsg.textContent = 'You must confirm you are 18 or older to join.';
+        return;
+      }
+      if(!document.getElementById('mfConsent').checked){
+        formMsg.hidden = false;
+        formMsg.textContent = 'Please agree to the membership terms to continue.';
+        return;
+      }
+
+      var payload = {
+        name: document.getElementById('mfName').value,
+        email: document.getElementById('mfEmail').value,
+        phone: document.getElementById('mfPhone').value
+      };
+
+      memberSubmitBtn.disabled = true;
+      memberSubmitBtn.textContent = 'Joining…';
+
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
+        body: JSON.stringify(payload)
+      })
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.success){
+            document.getElementById('membershipForm').hidden = true;
+            document.getElementById('membershipSuccess').hidden = false;
+          } else {
+            throw new Error('Signup failed');
+          }
+        })
+        .catch(function(){
+          formMsg.hidden = false;
+          formMsg.textContent = "Something went wrong submitting the form — check your connection and try again.";
+        })
+        .finally(function(){
+          memberSubmitBtn.disabled = false;
+          memberSubmitBtn.textContent = 'Join the Club';
+        });
+    });
+
+    // ---- Access code: validated live against the Apps Script sheet ----
+    function tryAccessCode(){
+      var input = document.getElementById('accessCodeInput');
+      var msg = document.getElementById('accessCodeMsg');
+      var btn = document.getElementById('accessCodeSubmit');
+      var entered = (input.value || '').trim().toUpperCase();
+
+      if(!entered){ return; }
+      msg.hidden = true;
+      btn.disabled = true;
+      btn.textContent = 'Checking…';
+
+      fetch(APPS_SCRIPT_URL + '?action=validate&code=' + encodeURIComponent(entered))
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.valid){
+            try{ localStorage.setItem('ee_member_ok','1'); }catch(e){}
+            showMall();
+          } else {
+            msg.hidden = false;
+            msg.textContent = "That code wasn't recognized. Make sure you've submitted the form above and wait for your verification email.";
+          }
+        })
+        .catch(function(){
+          msg.hidden = false;
+          msg.textContent = "Couldn't check that code right now — check your connection and try again.";
+        })
+        .finally(function(){
+          btn.disabled = false;
+          btn.textContent = 'Enter the mall';
+        });
+    }
+    document.getElementById('accessCodeSubmit').addEventListener('click', tryAccessCode);
+    document.getElementById('accessCodeInput').addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ tryAccessCode(); }
+    });
+  })();
+</script>
 </body>
 </html>
