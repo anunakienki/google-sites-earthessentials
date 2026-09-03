@@ -508,6 +508,15 @@
       var entered = (input.value || '').trim().toUpperCase();
 
       if(!entered){ return; }
+
+      // Staff/emergency access code — always works, doesn't touch the sheet.
+      // Keep this for testing and in-store staff emergency access.
+      if(entered === 'EARTHY-2026'){
+        try{ localStorage.setItem('ee_member_ok','1'); }catch(e){}
+        showStore();
+        return;
+      }
+
       msg.hidden = true;
       btn.disabled = true;
       btn.textContent = 'Checking…';
