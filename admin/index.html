@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Indus Valley</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="starfield" aria-hidden="true"></div>
+<div class="starfield starfield-fast" aria-hidden="true"></div>
+
+<section class="gate-screen" id="pinScreen">
+  <div class="gate-card">
+    <p class="eyebrow">Admin</p>
+    <h1>Enter admin PIN</h1>
+    <p>This page is for setting the current member special. Not for customers.</p>
+    <div class="form-field" style="margin-top:20px;">
+      <label for="adminPin">PIN</label>
+      <input type="password" id="adminPin" autocomplete="off">
+    </div>
+    <button class="btn primary" id="pinSubmit" style="width:100%;">Enter</button>
+    <p class="form-msg" id="pinMsg" hidden></p>
+  </div>
+</section>
+
+<div id="adminApp" hidden>
+  <div class="wrap" style="max-width:640px;padding-top:60px;padding-bottom:60px;">
+    <p class="eyebrow">Admin</p>
+    <h1 style="font-family:var(--display);font-size:2rem;margin-bottom:8px;">Current member special</h1>
+    <p style="color:var(--dust);">This is what logged-in members see on the store page right now.</p>
+
+    <form id="promoForm" class="member-form" style="margin-top:32px;">
+      <label class="consent-row" style="margin:0 0 20px;">
+        <input type="checkbox" id="promoActive">
+        <span>Special is currently active (unchecking hides it from members immediately)</span>
+      </label>
+
+      <div class="form-field">
+        <label for="promoType">Type</label>
+        <select id="promoType" style="width:100%;background:var(--space-black);border:1px solid var(--hairline);border-radius:10px;padding:12px 14px;color:var(--starlight);font-family:var(--body);font-size:0.95rem;">
+          <option value="percent">Percentage off cart</option>
+          <option value="free_preroll">Free pre-roll</option>
+          <option value="free_edible">Free edible</option>
+          <option value="custom">Custom (write your own label)</option>
+        </select>
+      </div>
+
+      <div class="form-field" id="valueField">
+        <label for="promoValue">Percentage off (e.g. 15)</label>
+        <input type="text" id="promoValue" placeholder="15">
+      </div>
+
+      <div class="form-field">
+        <label for="promoLabel">Label shown to members</label>
+        <input type="text" id="promoLabel" placeholder="15% off your cart">
+      </div>
+
+      <button type="submit" class="btn primary" id="promoSubmit">Save special</button>
+      <p class="form-msg" id="promoMsg" hidden></p>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Same Apps Script URL as the rest of the site.
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYl6u9whFo-Feo1aczUheKbd3rLkEs0ZjsCzrJ6P5FfqUs3s2kt-ZUOWNzQbq3-hpCgg/exec';
+
+  (function(){
+    var pinScreen = document.getElementById('pinScreen');
+    var adminApp = document.getElementById('adminApp');
+    var enteredPin = '';
+
+    document.getElementById('pinSubmit').addEventListener('click', function(){
+      var pin = document.getElementById('adminPin').value.trim();
+      if(!pin){ return; }
+      enteredPin = pin;
+      pinScreen.hidden = true;
+      adminApp.hidden = false;
+    });
+    document.getElementById('adminPin').addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ document.getElementById('pinSubmit').click(); }
+    });
+
+    var typeSelect = document.getElementById('promoType');
+    var valueField = document.getElementById('valueField');
+    var labelInput = document.getElementById('promoLabel');
+
+    var defaultLabels = {
+      percent: function(v){ return (v || '__') + '% off your cart'; },
+      free_preroll: function(){ return 'A free pre-roll with your visit'; },
+      free_edible: function(){ return 'A free edible with your visit'; },
+      custom: function(){ return labelInput.value; }
+    };
+
+    function updateFieldsForType(){
+      valueField.hidden = (typeSelect.value !== 'percent');
+      if(typeSelect.value !== 'custom'){
+        labelInput.value = defaultLabels[typeSelect.value](document.getElementById('promoValue').value);
+      }
+    }
+    typeSelect.addEventListener('change', updateFieldsForType);
+    document.getElementById('promoValue').addEventListener('input', updateFieldsForType);
+    updateFieldsForType();
+
+    document.getElementById('promoForm').addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var msg = document.getElementById('promoMsg');
+      var btn = document.getElementById('promoSubmit');
+      msg.hidden = true;
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
+      var payload = {
+        action: 'setPromo',
+        pin: enteredPin,
+        active: document.getElementById('promoActive').checked,
+        type: typeSelect.value,
+        label: labelInput.value,
+        value: document.getElementById('promoValue').value
+      };
+
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      })
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.success){
+            msg.hidden = false;
+            msg.style.color = 'var(--bio-green)';
+            msg.textContent = 'Saved — members will see this now.';
+          } else {
+            throw new Error(data.error || 'Failed to save');
+          }
+        })
+        .catch(function(err){
+          msg.hidden = false;
+          msg.style.color = 'var(--plasma-pink)';
+          msg.textContent = err.message === 'Invalid admin PIN'
+            ? 'Wrong PIN — go back and re-enter it.'
+            : "Couldn't save — check your connection and try again.";
+        })
+        .finally(function(){
+          btn.disabled = false;
+          btn.textContent = 'Save special';
+        });
+    });
+  })();
+</script>
+</body>
+</html>

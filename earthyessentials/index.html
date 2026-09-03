@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png">
 <link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
 </head>
@@ -96,6 +97,17 @@
 <!-- ===================== STAGE 3: STORE ===================== -->
 <div id="storeApp" hidden>
 
+<!-- QR reveal modal — shared by the first-login bonus and the member specials claim -->
+<div class="qr-modal" id="qrModal" hidden>
+  <div class="qr-modal-card">
+    <p class="eyebrow" id="qrModalEyebrow">Your code</p>
+    <h2 id="qrModalTitle">Show this to the cashier</h2>
+    <div id="qrCodeCanvas" class="qr-canvas"></div>
+    <p class="qr-modal-code" id="qrModalCodeText"></p>
+    <button class="btn primary" id="qrModalClose" style="width:100%;margin-top:16px;">Done</button>
+  </div>
+</div>
+
 <header class="site">
   <div class="wrap nav-row">
     <a class="brand" href="#top"><img src="../assets/logo-vertical-medium.png" alt="Earthy Essentials" class="brand-mark"></a>
@@ -105,6 +117,14 @@
     </nav>
   </div>
 </header>
+
+<div class="wrap" id="memberSpecial" hidden>
+  <div class="specials member-special-banner">
+    <p class="eyebrow">Member special</p>
+    <h3 id="memberSpecialLabel"></h3>
+    <button class="btn primary" id="memberSpecialClaim" style="margin-top:12px;">Claim in-store code</button>
+  </div>
+</div>
 
 <main id="top">
   <section class="hero wrap">
@@ -387,15 +407,16 @@
 </div><!-- /#storeApp -->
 
 <script>
+  // Paste your deployed Apps Script Web App URL here once you've set it up
+  // (see DEPLOY_INSTRUCTIONS.md). Shared across every gate/promo function below.
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYl6u9whFo-Feo1aczUheKbd3rLkEs0ZjsCzrJ6P5FfqUs3s2kt-ZUOWNzQbq3-hpCgg/exec';
+
   (function(){
     var gateAge = document.getElementById('gateAge');
     var gateMember = document.getElementById('gateMember');
     var storeApp = document.getElementById('storeApp');
 
-    // Paste your deployed Apps Script Web App URL here once you've set it up
-    // (see DEPLOY_INSTRUCTIONS.md). Both the signup form and the access-code
-    // check use this same URL.
-    var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYl6u9whFo-Feo1aczUheKbd3rLkEs0ZjsCzrJ6P5FfqUs3s2kt-ZUOWNzQbq3-hpCgg/exec';
+    // Same Apps Script URL used across every gate/promo function on this page.
 
     function showStore(){
       gateAge.hidden = true;
@@ -415,6 +436,7 @@
 
     if(ageOk && memberOk){
       showStore();
+      loadMemberSpecial();
     } else if(ageOk){
       showMemberGate();
     } // else: default state already shows gateAge
@@ -526,7 +548,12 @@
         .then(function(data){
           if(data.valid){
             try{ localStorage.setItem('ee_member_ok','1'); }catch(e){}
+            try{ localStorage.setItem('ee_last_code', entered); }catch(e){}
             showStore();
+            if(data.firstLoginAvailable){
+              claimFirstLoginBonus(entered);
+            }
+            loadMemberSpecial();
           } else {
             msg.hidden = false;
             msg.textContent = "That code wasn't recognized. Make sure you've submitted the form above and wait for your verification email.";
@@ -544,6 +571,76 @@
     document.getElementById('accessCodeSubmit').addEventListener('click', tryAccessCode);
     document.getElementById('accessCodeInput').addEventListener('keydown', function(e){
       if(e.key === 'Enter'){ tryAccessCode(); }
+    });
+  })();
+
+  // ===================== QR reveal modal, first-login bonus, member specials =====================
+  (function(){
+    var qrModal = document.getElementById('qrModal');
+    var qrCanvas = document.getElementById('qrCodeCanvas');
+    var qrTitle = document.getElementById('qrModalTitle');
+    var qrEyebrow = document.getElementById('qrModalEyebrow');
+    var qrCodeText = document.getElementById('qrModalCodeText');
+
+    function showQr(title, eyebrow, qrText, displayCode){
+      qrCanvas.innerHTML = '';
+      qrTitle.textContent = title;
+      qrEyebrow.textContent = eyebrow;
+      qrCodeText.textContent = displayCode;
+      new QRCode(qrCanvas, { text: qrText, width: 180, height: 180 });
+      qrModal.hidden = false;
+    }
+    document.getElementById('qrModalClose').addEventListener('click', function(){
+      qrModal.hidden = true;
+    });
+
+    window.claimFirstLoginBonus = function(memberCode){
+      fetch(APPS_SCRIPT_URL + '?action=firstLogin&code=' + encodeURIComponent(memberCode))
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.alreadyClaimed || data.error){ return; }
+          showQr(
+            'Show this to the cashier',
+            'Welcome bonus — 20% off',
+            data.qrText,
+            data.code
+          );
+        })
+        .catch(function(){ /* silently skip — not critical to the page working */ });
+    };
+
+    window.loadMemberSpecial = function(){
+      var banner = document.getElementById('memberSpecial');
+      var labelEl = document.getElementById('memberSpecialLabel');
+      fetch(APPS_SCRIPT_URL + '?action=getPromo')
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.active){
+            labelEl.textContent = data.label || 'A special is on right now';
+            banner.hidden = false;
+          } else {
+            banner.hidden = true;
+          }
+        })
+        .catch(function(){ banner.hidden = true; });
+    };
+
+    document.getElementById('memberSpecialClaim').addEventListener('click', function(){
+      var btn = this;
+      btn.disabled = true;
+      btn.textContent = 'Claiming…';
+      fetch(APPS_SCRIPT_URL + '?action=claimPromo')
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.error){
+            btn.textContent = 'Not available right now';
+            return;
+          }
+          showQr('Show this to the cashier', data.label, data.qrText, data.code);
+          btn.textContent = 'Claim in-store code';
+        })
+        .catch(function(){ btn.textContent = 'Try again'; })
+        .finally(function(){ btn.disabled = false; });
     });
   })();
 

@@ -647,3 +647,33 @@ footer.site a{color:var(--bio-green);text-decoration:none;}
   .store-card{animation:none;}
   .store-card-arrow{animation:none;}
 }
+
+/* ---------------- Member special banner ---------------- */
+.member-special-banner{margin-top:20px;}
+.member-special-banner h3{font-size:1.1rem;margin:6px 0 0;color:var(--starlight);}
+
+/* ---------------- QR reveal modal ---------------- */
+.qr-modal{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(6,6,12,0.94);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+.qr-modal[hidden]{display:none;}
+.qr-modal-card{
+  max-width:360px;width:100%;text-align:center;
+  border:1px solid var(--hairline);
+  border-radius:16px;
+  padding:32px 28px;
+  background:var(--nebula-violet);
+}
+.qr-modal-card h2{font-size:1.2rem;margin-bottom:16px;}
+.qr-canvas{
+  background:#fff;padding:16px;border-radius:12px;
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:180px;min-width:180px;
+}
+.qr-modal-code{
+  margin-top:14px;font-family:var(--mono);font-size:0.85rem;
+  color:var(--bio-green);letter-spacing:0.05em;
+}
