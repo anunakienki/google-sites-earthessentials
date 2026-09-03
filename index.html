@@ -3,25 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Indus Valley</title>
-<meta name="description" content="Indus Valley — a digital mall of stores. Earthy Essentials is now open.">
+<title>Earthy Essentials — Indus Valley</title>
+<meta name="description" content="Earthy Essentials: drinks, buds & bulk, edibles, vape carts, MoonSticks, cosmetics and CBD — a cosmic exploration of the 420 universe.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css">
-<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
-<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png">
+<link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
 </head>
 <body>
+
 <div class="starfield" aria-hidden="true"></div>
 <div class="starfield starfield-fast" aria-hidden="true"></div>
 
 <!-- ===================== STAGE 1: AGE VERIFICATION ===================== -->
 <section class="gate-screen" id="gateAge">
   <div class="gate-card">
-    <img class="gate-logo" src="/assets/logo-vertical-medium.png" alt="Indus Valley">
+    <img class="gate-logo" src="../assets/logo-vertical-medium.png" alt="Earthy Essentials">
     <p class="eyebrow">Transmission 1 of 2 — Verification</p>
     <h1>Are you 18 or older?</h1>
-    <p>Indus Valley hosts stores selling age-restricted products. Please confirm your age before entering the mall.</p>
+    <p>Earthy Essentials sells cannabis and related products. Please confirm your age before we let you aboard.</p>
     <div class="gate-actions">
       <button class="btn" id="ageNo">No</button>
       <button class="btn primary" id="ageYes">Yes, I'm 18+</button>
@@ -32,9 +33,10 @@
 <!-- ===================== STAGE 2: MEMBERSHIP & VERIFICATION ===================== -->
 <section class="gate-screen" id="gateMember" hidden>
   <div class="gate-card gate-card--wide">
+    <img class="gate-logo gate-logo--small" src="../assets/logo-icon-small.png" alt="Earthy Essentials">
     <p class="eyebrow">Transmission 2 of 2 — Membership</p>
     <h1>Join the crew</h1>
-    <p>New here? Fill in the membership form below. We'll email you a unique access code — you'll only be let into the mall once you enter it below. Already a member? Enter your code straight away.</p>
+    <p>New here? Fill in the membership form below. We'll email you a unique access code — you'll only be let into the store once you enter it below. Already a member? Enter your code straight away.</p>
 
     <form id="membershipForm" class="member-form">
       <div class="form-field">
@@ -64,10 +66,10 @@
 
       <div class="disclaimer-box" id="disclaimerBox" hidden>
         <h4>Membership Terms &amp; Disclaimer</h4>
-        <p>This membership form is provided for the purpose of joining the Indus Valley club, granting access to Indus Valley's stores, including Earthy Essentials. By submitting this form, you confirm that you are 18 years of age or older, and that all details you have provided are true and accurate to the best of your knowledge.</p>
-        <p>Membership is intended for personal, private, and responsible use in accordance with applicable law. Indus Valley does not encourage or condone unlawful use, sale, or distribution of any product. It remains the member's responsibility to understand and comply with the laws applicable to them in their jurisdiction.</p>
+        <p>This membership form is provided for the purpose of joining Earthy Essentials as a private members' club. By submitting this form, you confirm that you are 18 years of age or older, and that all details you have provided are true and accurate to the best of your knowledge.</p>
+        <p>Membership is intended for personal, private, and responsible use in accordance with applicable law. Earthy Essentials does not encourage or condone unlawful use, sale, or distribution of any product. It remains the member's responsibility to understand and comply with the laws applicable to them in their jurisdiction.</p>
         <p>Your information is used solely to manage your membership, verify your age, and communicate with you about your membership and any associated benefits, such as your access code or promotions. It will not be sold to third parties.</p>
-        <p>Membership may be declined or revoked at the discretion of Indus Valley.</p>
+        <p>Membership may be declined or revoked at the discretion of Earthy Essentials.</p>
       </div>
 
       <button type="submit" class="btn primary" id="memberSubmitBtn">Join the Club</button>
@@ -84,44 +86,321 @@
       <label for="accessCodeInput">Access code</label>
       <div class="access-code-row">
         <input type="text" id="accessCodeInput" placeholder="Enter the code from your verification email" autocomplete="off">
-        <button class="btn primary" id="accessCodeSubmit">Enter the mall</button>
+        <button class="btn primary" id="accessCodeSubmit">Enter store</button>
       </div>
       <p class="access-code-msg" id="accessCodeMsg" hidden></p>
     </div>
   </div>
 </section>
 
-<!-- ===================== STAGE 3: MALL LANDING ===================== -->
-<div id="mallApp" hidden>
-  <div class="landing">
-    <p class="eyebrow landing-title-eyebrow">Indus Valley</p>
-    <h1>A digital mall, under construction</h1>
-    <p style="color:var(--dust);max-width:46ch;">The mall itself is being built. In the meantime, one store is already open for business.</p>
+<!-- ===================== STAGE 3: STORE ===================== -->
+<div id="storeApp" hidden>
 
-    <div class="stores">
-      <a class="store-card" href="/earthyessentials/">
-        <span class="eyebrow">Now open</span>
-        <img src="/assets/logo-vertical-medium.png" alt="Earthy Essentials" class="store-card-logo">
-        <span class="store-card-cta">Enter the store <span class="store-card-arrow">→</span></span>
-      </a>
-    </div>
+<header class="site">
+  <div class="wrap nav-row">
+    <a class="brand" href="#top"><img src="../assets/logo-vertical-medium.png" alt="Earthy Essentials" class="brand-mark"></a>
+    <nav class="header-links">
+      <a href="#learn">Garden of Balance</a>
+      <a class="back-link" href="/">← Indus Valley</a>
+    </nav>
   </div>
-</div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <p class="eyebrow hero-eyebrow">Stardate — now boarding</p>
+    <h1>Explore the 420&nbsp;universe</h1>
+    <div class="comic-bubble">
+      <p class="tagline comic-text">Greetings, <span class="pop pop-yellow">cosmic beings</span>. We're all about helping you elevate your mind and find your <span class="pop pop-pink">happy place</span>, where all cosmic connections are made. To <span class="pop pop-blue">boldly go</span> where no <span class="pop pop-green">cannabis</span> has gone before.</p>
+    </div>
+
+    <!-- ===================== GARDEN OF BALANCE — INTERACTIVE Q&A ===================== -->
+    <section class="learn" id="learn">
+      <p class="eyebrow">Transmissions from Gaia</p>
+      <h2>The Garden of Balance</h2>
+      <p class="tagline" style="margin-left:0;margin-right:0;">Pick a guide, then pick a question — they'll answer on video.</p>
+
+      <!-- Interactive Q&A picker — hidden until real videos are uploaded.
+           Remove the "hidden" attribute below once videos/ has real .mp4 files. -->
+      <div id="learnInteractive" hidden>
+        <div class="avatar-tabs" id="avatarTabs" role="tablist" aria-label="Choose a guide"></div>
+
+        <div class="learn-panel">
+          <div class="video-frame">
+            <video id="learnVideo" controls playsinline hidden></video>
+            <div class="video-placeholder" id="learnPlaceholder">
+              <span class="play-dot">▶</span>
+              <p id="learnPlaceholderText">Select a question</p>
+            </div>
+          </div>
+          <div class="question-list" id="questionList" role="list"></div>
+        </div>
+      </div>
+
+      <div class="coming-soon-block">
+        <p class="eyebrow">Watch this space</p>
+        <p>Under construction — the guides are still filming. Check back soon.</p>
+      </div>
+    </section>
+  </section>
+
+  <div class="wrap">
+
+    <article class="category category--full" id="drinks">
+      <div class="cat-head">
+        <p class="index">01 / Waypoint</p>
+        <h2>Drinks</h2>
+        <p>Infused beverages for a smoother kind of lift — sip your way across the galaxy.</p>
+      </div>
+      <div class="media media--wide"><img src="assets/products/drinks-sodaze.jpg" alt="Sodaze infused soda cans"></div>
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>Sodaze</h4>
+          <p class="variant">Infused soda can</p>
+          <p class="price">30mg &amp; 50mg cans available</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="category category--full" id="papers">
+      <div class="cat-head">
+        <p class="index">02 / Waypoint</p>
+        <h2>Rolling Paper &amp; Accessories</h2>
+        <p>Everything for the ritual — papers, grinders, trays and the gear that makes it a ceremony.</p>
+      </div>
+      <div class="media media--wide"><img src="assets/products/papers-puffnpass.jpg" alt="Puff 'N Pass unbleached rolling papers with filter tips"></div>
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>Puff 'N Pass</h4>
+          <p class="variant">Unbleached rolling paper + filter tips, 1¼ size</p>
+          <p class="price">40 papers &amp; 40 tips per booklet</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="category category--full" id="buds">
+      <div class="cat-head">
+        <p class="index">03 / Waypoint</p>
+        <h2>Buds &amp; Bulk</h2>
+        <p>Flower by the gram or by the jar — curated strains for every kind of orbit.</p>
+      </div>
+      <div class="photo-gallery">
+        <div class="media"><img src="assets/products/buds-macro.jpg" alt="Cannabis buds"></div>
+        <div class="media"><img src="assets/products/prerolls-1.jpg" alt="Pre-rolls, bowl view"></div>
+        <div class="media"><img src="assets/products/prerolls-2.jpg" alt="Pre-rolls, bundled"></div>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>Flower</h4>
+          <p class="variant">By the gram</p>
+          <p class="price">From R30 per gram</p>
+        </div>
+        <div class="product-card">
+          <h4>Pre-Rolls</h4>
+          <p class="variant">Ready-rolled</p>
+          <p class="price">From R30 each</p>
+        </div>
+        <div class="product-card">
+          <h4>Bulk Deals</h4>
+          <p class="variant">Buy more, save more</p>
+          <span class="badge">Ask in-store</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="category category--full" id="edibles">
+      <div class="cat-head">
+        <p class="index">04 / Waypoint</p>
+        <h2>Edibles</h2>
+        <p>Gummies, chocolates and baked goods — a slower burn for a longer journey.</p>
+        <span class="strain-tag">Available in Sativa &amp; Indica</span>
+      </div>
+      <div class="photo-gallery photo-gallery--wrap">
+        <div class="media"><img src="assets/products/edibles-gummies-1.jpg" alt="Gummies, loose and packed"></div>
+        <div class="media"><img src="assets/products/edibles-jars-2.jpg" alt="Lollies and gummies in jars"></div>
+        <div class="media"><img src="assets/products/edibles-lollies-3.jpg" alt="Lollies close-up"></div>
+        <div class="media"><img src="assets/products/edibles-bites-cookies-4.jpg" alt="Biscuit bites and cookies"></div>
+      </div>
+      <div class="product-grid">
+        <div class="product-card"><h4>Gummies (Single)</h4><p class="price">10mg each</p></div>
+        <div class="product-card"><h4>Gummie Packs</h4><p class="price">50mg per pack</p></div>
+        <div class="product-card"><h4>Lollies</h4><p class="price">30mg each</p></div>
+        <div class="product-card"><h4>Biscuit Bites</h4><p class="price">50mg per pack</p></div>
+        <div class="product-card"><h4>Cookies</h4><p class="price">50mg each</p></div>
+        <div class="product-card"><h4>Chocolates</h4><p class="price">50mg / 100mg / 250mg</p></div>
+        <div class="product-card"><h4>Muffins</h4><p class="price">100mg</p><span class="badge">On request</span></div>
+        <div class="product-card"><h4>Special Cakes</h4><span class="badge">Pre-order only</span></div>
+      </div>
+    </article>
+
+    <article class="category category--full" id="vapes">
+      <div class="cat-head">
+        <p class="index">05 / Waypoint</p>
+        <h2>Vape Carts &amp; Pens</h2>
+        <p>Discreet, portable, ready when you are — carts and pens for life in transit.</p>
+        <span class="strain-tag">Available in Sativa &amp; Indica</span>
+      </div>
+      <div class="photo-gallery photo-gallery--2">
+        <div class="media"><img src="assets/products/vape-pens.jpg" alt="Vape pens"></div>
+        <div class="media"><img src="assets/products/vape-cart.jpg" alt="1ml vape cartridge"></div>
+      </div>
+      <div class="product-grid">
+        <div class="product-card"><h4>Vape Carts</h4><p class="variant">Multiple strains</p><span class="badge">Ask in-store</span></div>
+        <div class="product-card"><h4>Vape Pens</h4><span class="badge">Ask in-store</span></div>
+      </div>
+    </article>
+
+    <article class="category category--full" id="moonsticks">
+      <div class="cat-head">
+        <p class="index">06 / Waypoint</p>
+        <h2>MoonSticks</h2>
+        <p>The house pre-roll — rolled, ready, and named for a reason.</p>
+      </div>
+      <div class="media media--wide"><img src="assets/products/moonsticks-preroll.jpg" alt="MoonSticks pre-roll in glass tube"></div>
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>MoonSticks Pre-Roll</h4>
+          <p class="variant">In a glass pop-top tube</p>
+          <span class="badge">Ask in-store</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="category category--full" id="cosmetics">
+      <div class="cat-head">
+        <p class="index">07 / Waypoint</p>
+        <h2>Cosmetics</h2>
+        <p>Balms, oils and topicals infused for skin and body care — all by Shanti Natural Care.</p>
+      </div>
+      <div class="photo-gallery photo-gallery--wrap">
+        <div class="media"><img src="assets/products/cosmetics-lipbalm.jpg" alt="CBD Lip Balm, Sweet Orange"></div>
+        <div class="media"><img src="assets/products/cosmetics-massage-oil.jpg" alt="CBD Massage Oil, Avocado and Wheatgerm"></div>
+        <div class="media"><img src="assets/products/cosmetics-haircare-trio.jpg" alt="CBD Shampoo, Conditioner and Hair Food"></div>
+        <div class="media"><img src="assets/products/cosmetics-soap-ylangylang.jpg" alt="CBD Healing Soap, Ylang Ylang"></div>
+        <div class="media"><img src="assets/products/cosmetics-soap-teatree.jpg" alt="CBD Healing Soap, Tea Tree"></div>
+        <div class="media"><img src="assets/products/cosmetics-soap-plain.jpg" alt="CBD Healing Soap"></div>
+        <div class="media"><img src="assets/products/cosmetics-bathbombs.jpg" alt="CBD Bath Bombs"></div>
+        <div class="media"><img src="assets/products/cosmetics-painrelief-spray.jpg" alt="CBD Pain Relief Spray, Eucalyptus and Peppermint"></div>
+        <div class="media"><img src="assets/products/cosmetics-painrelief-drops.jpg" alt="CBD Pain Relief Drops"></div>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>CBD Lip Balm</h4>
+          <p class="variant">Sweet Orange · 15g</p>
+          <p class="price">20mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Massage Oil</h4>
+          <p class="variant">Avocado &amp; Wheatgerm · 50ml</p>
+          <p class="price">300mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Shampoo</h4>
+          <p class="variant">Hempseed, Avocado &amp; Peppermint · 250ml</p>
+          <p class="price">100mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Conditioner</h4>
+          <p class="variant">Hempseed, Avocado &amp; Peppermint · 250ml</p>
+          <p class="price">100mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Hair Food</h4>
+          <p class="variant">Hemp &amp; Avocado · 100ml</p>
+          <p class="price">100mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Healing Soap</h4>
+          <p class="variant">Ylang Ylang · 100g</p>
+          <p class="price">50mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Healing Soap</h4>
+          <p class="variant">Tea Tree · 100g</p>
+          <p class="price">50mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Healing Soap</h4>
+          <p class="variant">100g</p>
+          <p class="price">50mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Bath Bombs</h4>
+          <span class="badge">Ask in-store</span>
+        </div>
+        <div class="product-card">
+          <h4>CBD Pain Relief Spray</h4>
+          <p class="variant">Eucalyptus &amp; Peppermint · 100ml</p>
+          <p class="price">300mg CBD</p>
+        </div>
+        <div class="product-card">
+          <h4>CBD Pain Relief Drops</h4>
+          <p class="variant">MCT Oil · 30ml, 300 drops</p>
+          <p class="price">1000mg CBD</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="category category--full" id="cbd">
+      <div class="cat-head">
+        <p class="index">08 / Waypoint</p>
+        <h2>CBD Medical Products</h2>
+        <p>Non-intoxicating relief, dosed for the everyday — for wellness that stays grounded.</p>
+      </div>
+      <div class="coming-soon-block">
+        <p class="eyebrow">Landing soon</p>
+        <p>Product list and photos are being finalized — check back shortly.</p>
+      </div>
+    </article>
+
+    <div class="specials">
+      <p class="eyebrow">09 / Transmission</p>
+      <h3>Instore Specials</h3>
+      <p>Deals rotate in-store — drop by or join the crew below to hear about them first.</p>
+    </div>
+
+  </div>
+
+  <section class="membership wrap" id="membership">
+    <div id="membershipGuest">
+      <p class="eyebrow">Not a member yet?</p>
+      <h2>Join the crew</h2>
+      <p style="color:var(--dust);max-width:48ch;margin:0 auto;">May the cannabis be with you 🖖🏾 — sign up below for membership and specials.</p>
+      <div class="form-shell">
+        <iframe title="Earthy Essentials membership form" src="https://docs.google.com/forms/d/e/1FAIpQLSfAsfx447C0TPlffLOrJy-TOYILT6onqBzKuJzFfeQH8HATkQ/viewform?embedded=true" loading="lazy">Loading…</iframe>
+      </div>
+    </div>
+    <div id="membershipWelcome" hidden>
+      <p class="eyebrow">Welcome back</p>
+      <h2>You're already in the crew 🖖</h2>
+      <p style="color:var(--dust);max-width:48ch;margin:0 auto;">Member perks — like an in-store discount code — are coming in a future update. For now, enjoy the store.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    Earthy Essentials — part of the <a href="/">Indus Valley</a> digital mall
+  </div>
+</footer>
+
+</div><!-- /#storeApp -->
 
 <script>
   (function(){
     var gateAge = document.getElementById('gateAge');
     var gateMember = document.getElementById('gateMember');
-    var mallApp = document.getElementById('mallApp');
+    var storeApp = document.getElementById('storeApp');
 
     // Paste your deployed Apps Script Web App URL here once you've set it up
-    // (see DEPLOY_INSTRUCTIONS.md). Same URL as the Earthy Essentials store page.
+    // (see DEPLOY_INSTRUCTIONS.md). Both the signup form and the access-code
+    // check use this same URL.
     var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYl6u9whFo-Feo1aczUheKbd3rLkEs0ZjsCzrJ6P5FfqUs3s2kt-ZUOWNzQbq3-hpCgg/exec';
 
-    function showMall(){
+    function showStore(){
       gateAge.hidden = true;
       gateMember.hidden = true;
-      mallApp.hidden = false;
+      storeApp.hidden = false;
     }
     function showMemberGate(){
       gateAge.hidden = true;
@@ -135,7 +414,7 @@
     }catch(e){ ageOk = false; memberOk = false; }
 
     if(ageOk && memberOk){
-      showMall();
+      showStore();
     } else if(ageOk){
       showMemberGate();
     } // else: default state already shows gateAge
@@ -229,6 +508,15 @@
       var entered = (input.value || '').trim().toUpperCase();
 
       if(!entered){ return; }
+
+      // Staff/emergency access code — always works, doesn't touch the sheet.
+      // Keep this for testing and in-store staff emergency access.
+      if(entered === 'EARTHY-2026'){
+        try{ localStorage.setItem('ee_member_ok','1'); }catch(e){}
+        showStore();
+        return;
+      }
+
       msg.hidden = true;
       btn.disabled = true;
       btn.textContent = 'Checking…';
@@ -238,7 +526,7 @@
         .then(function(data){
           if(data.valid){
             try{ localStorage.setItem('ee_member_ok','1'); }catch(e){}
-            showMall();
+            showStore();
           } else {
             msg.hidden = false;
             msg.textContent = "That code wasn't recognized. Make sure you've submitted the form above and wait for your verification email.";
@@ -250,13 +538,148 @@
         })
         .finally(function(){
           btn.disabled = false;
-          btn.textContent = 'Enter the mall';
+          btn.textContent = 'Enter store';
         });
     }
     document.getElementById('accessCodeSubmit').addEventListener('click', tryAccessCode);
     document.getElementById('accessCodeInput').addEventListener('keydown', function(e){
       if(e.key === 'Enter'){ tryAccessCode(); }
     });
+  })();
+
+  // ===================== Garden of Balance — Q&A data =====================
+  // To add or change content: edit this object only. Each guide has a list of
+  // {q, file} pairs — q is the question text shown as a button, file is the
+  // path to that guide's video answer once you've uploaded it to /videos/.
+  // Filenames below are placeholders — upload your real .mp4 files to match
+  // these paths (or edit the paths to match your filenames).
+  var GUIDES = {
+    gaia: {
+      label: 'Gaia',
+      role: 'Host',
+      questions: [
+        { q: 'What is the Garden of Balance?', file: '/videos/gaia/what-is-the-garden.mp4' },
+        { q: 'How do I know which guide is right for me?', file: '/videos/gaia/which-guide.mp4' },
+        { q: 'Is cannabis right for a first-timer?', file: '/videos/gaia/first-timer.mp4' }
+      ]
+    },
+    indica: {
+      label: 'Indica',
+      role: 'Rest & Ease',
+      questions: [
+        { q: 'What is Indica good for?', file: '/videos/indica/what-is-indica.mp4' },
+        { q: 'Will it help me sleep?', file: '/videos/indica/sleep.mp4' },
+        { q: 'Best time of day to use it?', file: '/videos/indica/best-time.mp4' }
+      ]
+    },
+    sativa: {
+      label: 'Sativa',
+      role: 'Energy & Focus',
+      questions: [
+        { q: 'What is Sativa good for?', file: '/videos/sativa/what-is-sativa.mp4' },
+        { q: 'Can it help with focus?', file: '/videos/sativa/focus.mp4' },
+        { q: 'Best time of day to use it?', file: '/videos/sativa/best-time.mp4' }
+      ]
+    },
+    hybrid: {
+      label: 'Hybrid',
+      role: 'Balance',
+      questions: [
+        { q: 'What is a Hybrid strain?', file: '/videos/hybrid/what-is-hybrid.mp4' },
+        { q: 'How do I choose Indica- vs Sativa-leaning?', file: '/videos/hybrid/leaning.mp4' },
+        { q: 'Good for a first-time hybrid user?', file: '/videos/hybrid/first-time.mp4' }
+      ]
+    }
+  };
+
+  (function(){
+    var tabsEl = document.getElementById('avatarTabs');
+    var listEl = document.getElementById('questionList');
+    var videoEl = document.getElementById('learnVideo');
+    var placeholderEl = document.getElementById('learnPlaceholder');
+    var placeholderText = document.getElementById('learnPlaceholderText');
+    var activeGuide = 'gaia';
+
+    function renderTabs(){
+      tabsEl.innerHTML = '';
+      Object.keys(GUIDES).forEach(function(key){
+        var g = GUIDES[key];
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'avatar-tab' + (key === activeGuide ? ' active' : '');
+        btn.textContent = g.label;
+        btn.setAttribute('role','tab');
+        btn.setAttribute('aria-selected', key === activeGuide ? 'true' : 'false');
+        btn.addEventListener('click', function(){
+          activeGuide = key;
+          resetPlayer();
+          renderTabs();
+          renderQuestions();
+        });
+        tabsEl.appendChild(btn);
+      });
+    }
+
+    function renderQuestions(){
+      listEl.innerHTML = '';
+      GUIDES[activeGuide].questions.forEach(function(item){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'question-btn';
+        btn.textContent = item.q;
+        btn.addEventListener('click', function(){
+          playAnswer(item);
+        });
+        listEl.appendChild(btn);
+      });
+    }
+
+    function resetPlayer(){
+      videoEl.pause();
+      videoEl.removeAttribute('src');
+      videoEl.load();
+      videoEl.hidden = true;
+      placeholderEl.hidden = false;
+      placeholderText.textContent = 'Select a question';
+    }
+
+    function playAnswer(item){
+      placeholderText.textContent = 'Loading answer…';
+      videoEl.src = item.file;
+      videoEl.hidden = false;
+      placeholderEl.hidden = true;
+      videoEl.play().catch(function(){
+        // Autoplay may be blocked — that's fine, the controls are visible.
+      });
+      videoEl.onerror = function(){
+        videoEl.hidden = true;
+        placeholderEl.hidden = false;
+        placeholderText.textContent = 'Video coming soon';
+      };
+    }
+
+    renderTabs();
+    renderQuestions();
+  })();
+
+  // ===================== Bottom membership section state =====================
+  // Anyone reaching this page has already passed the access-code gate, but we
+  // keep this check so the section is ready for a future real login system
+  // (member accounts + an in-store discount code) without more rework later.
+  (function(){
+    var guest = document.getElementById('membershipGuest');
+    var welcome = document.getElementById('membershipWelcome');
+    var isMember;
+    try{ isMember = localStorage.getItem('ee_member_ok') === '1'; }
+    catch(e){ isMember = false; }
+
+    if(isMember){
+      guest.hidden = true;
+      welcome.hidden = false;
+    } else {
+      guest.hidden = false;
+      welcome.hidden = true;
+    }
   })();
 </script>
 </body>
