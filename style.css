@@ -681,3 +681,19 @@ footer.site a{color:var(--bio-green);text-decoration:none;}
   margin-top:14px;font-family:var(--mono);font-size:0.85rem;
   color:var(--bio-green);letter-spacing:0.05em;
 }
+
+/* ---------------- Staff redeem result ---------------- */
+.redeem-result{
+  margin-top:20px;padding:16px 18px;border-radius:12px;
+  font-size:0.95rem;line-height:1.5;
+}
+.redeem-result[hidden]{display:none;}
+.redeem-result--success{
+  background:rgba(124,255,178,0.12);border:1px solid var(--bio-green);color:var(--bio-green);
+}
+.redeem-result--warn{
+  background:rgba(255,210,63,0.1);border:1px solid #ffd23f;color:#ffd23f;
+}
+.redeem-result--error{
+  background:rgba(255,79,163,0.1);border:1px solid var(--plasma-pink);color:var(--plasma-pink);
+}

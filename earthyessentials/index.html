@@ -380,22 +380,6 @@
     </div>
 
   </div>
-
-  <section class="membership wrap" id="membership">
-    <div id="membershipGuest">
-      <p class="eyebrow">Not a member yet?</p>
-      <h2>Join the crew</h2>
-      <p style="color:var(--dust);max-width:48ch;margin:0 auto;">May the cannabis be with you 🖖🏾 — sign up below for membership and specials.</p>
-      <div class="form-shell">
-        <iframe title="Earthy Essentials membership form" src="https://docs.google.com/forms/d/e/1FAIpQLSfAsfx447C0TPlffLOrJy-TOYILT6onqBzKuJzFfeQH8HATkQ/viewform?embedded=true" loading="lazy">Loading…</iframe>
-      </div>
-    </div>
-    <div id="membershipWelcome" hidden>
-      <p class="eyebrow">Welcome back</p>
-      <h2>You're already in the crew 🖖</h2>
-      <p style="color:var(--dust);max-width:48ch;margin:0 auto;">Member perks — like an in-store discount code — are coming in a future update. For now, enjoy the store.</p>
-    </div>
-  </section>
 </main>
 
 <footer class="site">
@@ -757,26 +741,6 @@
 
     renderTabs();
     renderQuestions();
-  })();
-
-  // ===================== Bottom membership section state =====================
-  // Anyone reaching this page has already passed the access-code gate, but we
-  // keep this check so the section is ready for a future real login system
-  // (member accounts + an in-store discount code) without more rework later.
-  (function(){
-    var guest = document.getElementById('membershipGuest');
-    var welcome = document.getElementById('membershipWelcome');
-    var isMember;
-    try{ isMember = localStorage.getItem('ee_member_ok') === '1'; }
-    catch(e){ isMember = false; }
-
-    if(isMember){
-      guest.hidden = true;
-      welcome.hidden = false;
-    } else {
-      guest.hidden = false;
-      welcome.hidden = true;
-    }
   })();
 </script>
 </body>
