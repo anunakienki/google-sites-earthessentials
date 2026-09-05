@@ -60,6 +60,29 @@ h1,h2,h3{
   z-index:0;
   pointer-events:none;
   background-image:
+    radial-gradient(1px 1px at 20px 30px, var(--dust), transparent),
+    radial-gradient(1px 1px at 140px 90px, var(--dust), transparent),
+    radial-gradient(1px 1px at 260px 40px, var(--dust), transparent),
+    radial-gradient(1px 1px at 320px 180px, var(--dust), transparent),
+    radial-gradient(1px 1px at 60px 220px, var(--dust), transparent),
+    radial-gradient(1px 1px at 400px 260px, var(--dust), transparent),
+    radial-gradient(1px 1px at 180px 300px, var(--dust), transparent),
+    radial-gradient(1px 1px at 460px 60px, var(--dust), transparent),
+    radial-gradient(1px 1px at 240px 150px, var(--dust), transparent),
+    radial-gradient(1px 1px at 100px 130px, var(--dust), transparent),
+    radial-gradient(1px 1px at 350px 90px, var(--dust), transparent),
+    radial-gradient(1px 1px at 430px 300px, var(--dust), transparent);
+  background-repeat:repeat;
+  background-size:480px 320px;
+  opacity:0.35;
+  animation:drift 70s linear infinite;
+}
+@keyframes drift{
+  from{background-position:0 0;}
+  to{background-position:-480px 320px;}
+}
+.starfield-mid{
+  background-image:
     radial-gradient(1.5px 1.5px at 20px 30px, var(--starlight), transparent),
     radial-gradient(1.5px 1.5px at 140px 90px, var(--starlight), transparent),
     radial-gradient(1px 1px at 260px 40px, var(--dust), transparent),
@@ -68,24 +91,23 @@ h1,h2,h3{
     radial-gradient(1.5px 1.5px at 400px 260px, var(--starlight), transparent),
     radial-gradient(1px 1px at 180px 300px, var(--dust), transparent),
     radial-gradient(1.5px 1.5px at 460px 60px, var(--starlight), transparent),
-    radial-gradient(1px 1px at 240px 150px, var(--starlight), transparent);
-  background-repeat:repeat;
+    radial-gradient(1px 1px at 240px 150px, var(--starlight), transparent),
+    radial-gradient(1.5px 1.5px at 80px 270px, var(--starlight), transparent),
+    radial-gradient(1px 1px at 380px 40px, var(--dust), transparent);
   background-size:480px 320px;
   opacity:0.6;
   animation:drift 45s linear infinite;
-}
-@keyframes drift{
-  from{background-position:0 0;}
-  to{background-position:-480px 320px;}
 }
 .starfield-fast{
   background-image:
     radial-gradient(2px 2px at 90px 60px, var(--starlight), transparent),
     radial-gradient(1.5px 1.5px at 300px 200px, var(--starlight), transparent),
     radial-gradient(2px 2px at 420px 110px, var(--starlight), transparent),
-    radial-gradient(1.5px 1.5px at 150px 260px, var(--dust), transparent);
+    radial-gradient(1.5px 1.5px at 150px 260px, var(--dust), transparent),
+    radial-gradient(2px 2px at 250px 320px, var(--starlight), transparent),
+    radial-gradient(1.5px 1.5px at 40px 150px, var(--starlight), transparent);
   background-size:520px 360px;
-  opacity:0.45;
+  opacity:0.5;
   animation:drift-fast 18s linear infinite;
 }
 @keyframes drift-fast{
@@ -591,11 +613,10 @@ footer.site a{color:var(--bio-green);text-decoration:none;}
 
 /* Coming-soon landing (root indusvalley.earth) */
 .landing{
-  min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:24px;position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:0 24px 24px;position:relative;z-index:1;
 }
-.landing h1{font-size:clamp(1.4rem,3.2vw,1.9rem);font-weight:500;color:var(--dust);}
+.landing h1{font-size:clamp(1.05rem,2.2vw,1.3rem);font-weight:500;color:var(--dust);margin-top:0;}
 .landing-title-eyebrow{
   font-size:clamp(1.9rem, 5.5vw, 2.8rem);
   font-weight:400;
@@ -696,4 +717,547 @@ footer.site a{color:var(--bio-green);text-decoration:none;}
 }
 .redeem-result--error{
   background:rgba(255,79,163,0.1);border:1px solid var(--plasma-pink);color:var(--plasma-pink);
+}
+
+/* ============================================================
+   Lo Music store — scoped accent palette, distinct from Earthy
+   Essentials but sharing the site's overall dark/starfield shell.
+   ============================================================ */
+.page-lomusic{
+  --lm-gold:#e8b94d;
+  --lm-violet:#9b6bd6;
+}
+.lm-artist-mark{
+  text-decoration:none;
+  display:flex;flex-direction:column;
+  line-height:1;
+}
+.lm-artist-name{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing:0.01em;
+  color:var(--starlight);
+  position:relative;
+  padding-bottom:8px;
+}
+.lm-artist-name::after{
+  content:"";
+  position:absolute;left:0;bottom:0;
+  width:56px;height:3px;
+  background:linear-gradient(90deg, var(--lm-gold), var(--lm-violet));
+  border-radius:2px;
+}
+.lm-artist-sub{
+  margin-top:10px;
+  font-family:var(--mono);
+  font-size:0.72rem;
+  letter-spacing:0.32em;
+  text-transform:uppercase;
+  color:var(--lm-gold);
+}
+
+/* Hero placement — her name is the dominant element on the page */
+.lm-hero-artist{margin-bottom:22px;text-align:center;}
+.lm-hero-artist .lm-artist-name{
+  display:inline-block;
+  font-size:clamp(3rem, 9vw, 5.5rem);
+}
+.lm-hero-artist .lm-artist-name::after{
+  left:50%;transform:translateX(-50%);
+  width:96px;height:4px;
+}
+.lm-hero-artist .lm-artist-sub{display:block;margin-top:16px;}
+.lm-eyebrow{color:var(--lm-gold);}
+.lm-heading{
+  font-size:clamp(2.2rem,6vw,3.8rem);
+  background:linear-gradient(120deg, var(--starlight) 25%, var(--lm-gold) 65%, var(--lm-violet) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+.lm-services{padding:56px 0 0;border-top:1px solid var(--hairline);}
+.lm-service-grid{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:16px;
+}
+.lm-service-card{
+  border:1px solid var(--hairline);
+  border-radius:14px;
+  padding:22px 24px;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(155,107,214,0.12), transparent 60%),
+    var(--nebula-violet);
+}
+.lm-service-card h3{
+  font-family:var(--display);font-size:1.05rem;margin:0 0 8px;color:var(--lm-gold);
+}
+.lm-service-card p{margin:0;color:var(--dust);font-size:0.92rem;max-width:none;}
+
+.lm-gallery, .lm-booking, .lm-shop, .lm-payment{
+  padding:56px 0 0;border-top:1px solid var(--hairline);margin-top:56px;
+}
+.lm-gallery h2, .lm-booking h2, .lm-shop h2, .lm-payment h2{
+  font-family:var(--display);font-size:1.6rem;margin:6px 0 10px;
+}
+
+.lm-calendar-shell{margin-top:20px;}
+.lm-calendar-shell iframe{height:600px;background:var(--space-black);}
+
+.lm-payment-card{
+  margin-top:20px;
+  border:1px solid var(--hairline);
+  border-radius:14px;
+  padding:24px 28px;
+  background:var(--nebula-violet);
+  max-width:440px;
+}
+.lm-payment-card p{margin:0 0 8px;color:var(--starlight);}
+.lm-payment-card p:first-child{color:var(--lm-gold);font-family:var(--display);}
+.lm-payment-line span{color:var(--dust);}
+
+.lm-note{
+  margin-top:14px;font-size:0.82rem;color:var(--plasma-pink);
+}
+
+/* ---------------- Contact section ---------------- */
+.contact-section{
+  margin-top:24px;padding-top:56px;border-top:1px solid var(--hairline);
+}
+.contact-section h2{font-family:var(--display);font-size:1.6rem;margin:6px 0 20px;}
+.contact-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:16px;
+}
+.contact-card{
+  border:1px solid var(--hairline);
+  border-radius:14px;
+  padding:20px 22px;
+  background:var(--nebula-violet);
+}
+.contact-card p{margin:0 0 6px;color:var(--starlight);font-size:0.95rem;}
+.contact-card p.eyebrow{margin-bottom:10px;}
+.contact-link{
+  display:block;margin-top:6px;
+  color:var(--bio-green);text-decoration:none;font-size:0.95rem;
+}
+.contact-link:hover{text-decoration:underline;}
+
+/* ============================================================
+   Landing page center hub — breathing water ripple + daily
+   rotating Sanskrit ring. Scoped under .iv-hub so its own color
+   tokens never touch the site's global --starlight/--dust/etc.
+   ============================================================ */
+.iv-hub{
+  --hub-void:#0A0B10;
+  --hub-starlight:#E9E4D8;
+  --hub-starlight-dim:#A9A498;
+  --hub-water:#7FC4CC;
+  display:flex;justify-content:center;
+  margin:48px 0;
+  position:relative;z-index:1;
+}
+.iv-hub .hub-stage{
+  width:280px;height:280px;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.iv-hub .water-core{
+  width:168px;height:168px;
+  border-radius:50%;
+  position:relative;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 42% 38%, #123138 0%, #06171b 55%, #030a0c 80%);
+  border:1px solid rgba(127,196,204,0.25);
+  box-shadow:
+    inset 0 0 24px rgba(0,0,0,0.6),
+    0 0 40px rgba(20,60,66,0.35);
+}
+.iv-hub .ripple{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(127,196,204,0.4);
+  animation:iv-hub-rippleOut 8s ease-in-out infinite;
+}
+.iv-hub .ripple:nth-child(2){animation-delay:2.7s;}
+.iv-hub .ripple:nth-child(3){animation-delay:5.4s;}
+@keyframes iv-hub-rippleOut{
+  0%{width:14px;height:14px;opacity:0.65;}
+  100%{width:160px;height:160px;opacity:0;}
+}
+.iv-hub .hub-label{
+  font-family:'Spectral', serif;
+  font-style:italic;
+  font-weight:400;
+  font-size:1.05rem;
+  color:var(--hub-starlight);
+  z-index:3;
+  letter-spacing:0.02em;
+}
+.iv-hub .script-ring{
+  position:absolute;inset:0;
+  animation:iv-hub-ringspin 90s linear infinite;
+  z-index:2;
+}
+@keyframes iv-hub-ringspin{ to{ transform:rotate(360deg); } }
+.iv-hub .glyph{
+  position:absolute;
+  top:4px;left:50%;
+  width:18px;height:18px;
+  margin-left:-9px;
+  transform-origin:50% 80px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Sans Devanagari', serif;
+  font-size:1rem;
+  color:var(--hub-starlight-dim);
+  opacity:0.75;
+  text-shadow:0 0 8px rgba(233,228,216,0.15);
+}
+@media (prefers-reduced-motion:reduce){
+  .iv-hub .ripple{animation:none;}
+  .iv-hub .script-ring{animation:none;}
+}
+
+/* ============================================================
+   Landing page story hero — "a mall built on buried ground."
+   Scoped under .iv-story-hero (NOT .hero, which the Earthy
+   Essentials page already uses with completely different rules)
+   with its own color tokens so nothing here touches the site's
+   global --starlight/--dust or the store page's .hero styling.
+   ============================================================ */
+.iv-story-hero{
+  --story-void:#0A0B10;
+  --story-starlight:#E9E4D8;
+  --story-starlight-dim:#A9A498;
+  --story-terracotta:#B5563C;
+  --story-sandstone:#D8B589;
+  --story-line:rgba(233,228,216,0.14);
+  position:relative;z-index:1;
+  max-width:720px;
+  margin:0 auto;
+  padding:8vh 24px 3vh;
+  text-align:center;
+}
+.iv-story-hero .mark{
+  font-family:'Spectral', serif;
+  font-weight:300;
+  font-style:italic;
+  font-size:0.95rem;
+  color:var(--story-sandstone);
+  letter-spacing:0.02em;
+  margin:0 0 18px;
+}
+.iv-story-hero h1{
+  font-family:'Cinzel', serif;
+  font-weight:600;
+  font-size:clamp(2.1rem, 5.4vw, 3.2rem);
+  line-height:1.15;
+  margin:0 0 22px;
+  letter-spacing:0.04em;
+  background:linear-gradient(120deg, var(--story-starlight) 15%, var(--story-sandstone) 55%, var(--story-terracotta) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.iv-brand-sub{
+  font-family:'Cinzel', serif;
+  font-weight:600;
+  font-size:0.32em;
+  letter-spacing:0.02em;
+  vertical-align:middle;
+  margin-left:0.2em;
+  display:inline-block;
+}
+.iv-sanskrit-sub{
+  font-family:'Noto Sans Devanagari', 'Cinzel', serif !important;
+  font-weight:500 !important;
+}
+.iv-story-hero p.lede{
+  font-size:1.05rem;
+  line-height:1.7;
+  color:var(--story-starlight-dim);
+  max-width:58ch;
+  margin:0 auto 30px;
+}
+.iv-story-hero .fact-line{
+  font-family:'Spectral', serif;
+  font-style:italic;
+  font-size:1rem;
+  color:var(--story-sandstone);
+  min-height:1.6em;
+  margin-bottom:22px;
+  transition:opacity 0.6s ease;
+}
+.iv-story-hero .further-reading{
+  font-size:0.82rem;
+  color:var(--story-starlight-dim);
+}
+.iv-story-hero .further-reading a{
+  color:var(--story-terracotta);
+  text-decoration:none;
+  border-bottom:1px solid rgba(181,86,60,0.4);
+  padding-bottom:1px;
+}
+.iv-story-hero .further-reading a:hover{ border-bottom-color:var(--story-terracotta); }
+.iv-story-hero .hero-divider{
+  width:44px;height:1px;
+  background:var(--story-line);
+  margin:46px auto 0;
+}
+@media (prefers-reduced-motion: reduce){
+  .iv-story-hero .fact-line{ transition:none; }
+}
+
+/* ============================================================
+   Landing page store directory — search + A-Z browse, feeds the
+   same store data the future portal ring will use. Color tokens
+   scoped under .directory-wrap (NOT bare :root) so --starlight
+   etc. here can never override the site's real global --starlight
+   token used on every other page.
+   ============================================================ */
+.directory-wrap{
+  --dir-void:#0A0B10;
+  --dir-void-2:#10121A;
+  --dir-starlight:#E9E4D8;
+  --dir-starlight-dim:#A9A498;
+  --dir-terracotta:#B5563C;
+  --dir-bronze:#8C7A5B;
+  --dir-line:rgba(233,228,216,0.14);
+  position:relative;z-index:1;
+  max-width:400px;
+  margin:0 auto;
+  padding:0 24px;
+}
+.directory-heading{
+  font-family:'Spectral', serif;
+  font-style:italic;
+  font-weight:400;
+  font-size:1.02rem;
+  text-align:center;
+  color:var(--dir-starlight);
+  margin:0 0 18px;
+}
+.search-box{position:relative;width:100%;}
+.search-box input{
+  width:100%;
+  background:var(--dir-void-2);
+  border:1px solid var(--dir-line);
+  color:var(--dir-starlight);
+  font-family:'Inter', sans-serif;
+  font-size:0.85rem;
+  padding:10px 14px 10px 34px;
+  border-radius:999px;
+  outline:none;
+  transition:border-color 0.2s ease;
+}
+.search-box input::placeholder{ color:var(--dir-starlight-dim); }
+.search-box input:focus{ border-color:var(--dir-bronze); }
+.search-box svg{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:12px;height:12px;opacity:0.5;
+  color:var(--dir-starlight-dim);
+}
+.search-results{margin:8px 0 0;text-align:left;}
+.search-result{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 4px;
+  font-size:0.88rem;
+  color:var(--dir-starlight-dim);
+  cursor:pointer;
+  border-radius:8px;
+}
+.search-result:hover{ background:rgba(233,228,216,0.05); color:var(--dir-starlight); }
+.search-result .dot{ width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+.search-result .soon{ font-size:0.72rem;color:var(--dir-starlight-dim);opacity:0.6;margin-left:auto; }
+
+.mode-toggle{display:flex;justify-content:center;gap:6px;margin:16px 0 14px;}
+.mode-btn{
+  background:transparent;
+  border:1px solid var(--dir-line);
+  color:var(--dir-starlight-dim);
+  font-family:'Inter', sans-serif;
+  font-size:0.7rem;
+  padding:5px 13px;
+  border-radius:999px;
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+.mode-btn.active{
+  color:var(--dir-starlight);
+  border-color:var(--dir-bronze);
+  background:rgba(140,122,91,0.12);
+}
+.mode-btn:hover:not(.active){ color:var(--dir-starlight); }
+
+.az-list{display:none;}
+.az-list.visible{display:block;}
+.az-group{margin-bottom:18px;}
+.az-letter{
+  font-family:'Spectral', serif;
+  font-style:italic;
+  font-size:0.85rem;
+  color:var(--dir-bronze);
+  border-bottom:1px solid var(--dir-line);
+  padding-bottom:6px;
+  margin-bottom:8px;
+}
+.az-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 4px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.az-item:hover{ background:rgba(233,228,216,0.05); }
+.az-item .swatch{
+  width:30px;height:30px;
+  border-radius:50%;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Spectral', serif;
+  font-size:0.85rem;
+  color:var(--dir-void);
+}
+.az-item.placeholder .swatch{
+  background:transparent !important;
+  border:1.5px dashed var(--dir-line);
+  color:var(--dir-starlight-dim);
+}
+.az-item-text{flex:1;}
+.az-item-name{font-size:0.9rem;color:var(--dir-starlight);font-weight:500;}
+.az-item-sub{font-size:0.74rem;color:var(--dir-starlight-dim);}
+.az-item .soon-tag{font-size:0.68rem;color:var(--dir-starlight-dim);opacity:0.6;}
+
+.directory-hint{
+  text-align:center;
+  font-size:0.74rem;
+  color:var(--dir-starlight-dim);
+  opacity:0.7;
+  margin-top:26px;
+}
+
+/* ============================================================
+   Portal ring — multiple stores on real Keplerian ellipses around
+   the hub (hub at the ellipse's FOCUS, not center), drag-to-rotate,
+   glow trail per store, near/far depth via scale+opacity+z-index.
+   Tokens scoped under .portal-section, not bare :root, for the
+   same reason as the hero/directory pieces.
+   ============================================================ */
+.portal-section{
+  --portal-void:#0A0B10;
+  --portal-starlight:#E9E4D8;
+  --portal-starlight-dim:#A9A498;
+  --portal-line:rgba(233,228,216,0.14);
+  --portal-bronze:#8C7A5B;
+  position:relative;z-index:1;
+  padding:20px 24px 40px;
+  text-align:center;
+}
+.portal-hint{
+  font-size:0.8rem;
+  color:var(--portal-starlight-dim);
+  margin-bottom:28px;
+  letter-spacing:0.01em;
+}
+.portal-stage{
+  position:relative;
+  width:100%;
+  max-width:640px;
+  height:480px;
+  margin:0 auto;
+  perspective:1400px;
+  cursor:grab;
+}
+.portal-stage.dragging{ cursor:grabbing; }
+.portal-stage .iv-hub{
+  margin:0;
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  z-index:500;
+}
+#trailCanvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+}
+
+.node{
+  position:absolute;
+  left:0;top:0;
+  width:20px;
+  margin-left:-10px;
+  margin-top:-10px;
+  text-align:center;
+  backface-visibility:hidden;
+  will-change:transform, opacity;
+  pointer-events:none;
+}
+.node-star{
+  width:12px;height:12px;
+  margin:0 auto;
+  border-radius:50%;
+  background:var(--node-color, var(--portal-starlight));
+  box-shadow:0 0 8px 2px var(--node-color, var(--portal-starlight)), 0 0 18px 5px rgba(233,228,216,0.25);
+  cursor:pointer;
+  pointer-events:auto;
+  transition:transform 0.2s ease;
+}
+.node-star:hover{ transform:scale(1.5); }
+.node.placeholder .node-star{
+  box-shadow:0 0 5px 1px var(--node-color, var(--portal-line));
+  cursor:default;
+  opacity:0.6;
+}
+
+/* ---------------- Selected-store popup card (matches the static store card) ---------------- */
+.orbit-store-popup{
+  position:relative;
+  width:220px;
+  margin:24px auto 0;
+  text-align:center;
+  padding:24px 22px;
+  border-radius:16px;
+  border:1.5px solid var(--bio-green);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(124,255,178,0.14), transparent 60%),
+    rgba(124,255,178,0.04);
+  box-shadow:0 0 0 1px rgba(124,255,178,0.15), 0 0 32px -4px rgba(124,255,178,0.45);
+  z-index:600;
+  animation:card-glow 2.6s ease-in-out infinite;
+}
+.orbit-store-popup[hidden]{display:none;}
+.orbit-store-popup .store-card-logo{width:120px;height:auto;margin:10px auto;}
+.orbit-popup-close{
+  position:absolute;top:8px;right:10px;
+  background:none;border:none;
+  color:var(--dust);font-size:1.3rem;line-height:1;
+  cursor:pointer;padding:4px;
+}
+.orbit-popup-close:hover{ color:var(--starlight); }
+.orbit-popup-enter{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:10px;
+  font-family:var(--body);font-weight:600;font-size:0.95rem;
+  color:var(--starlight);text-decoration:none;
+}
+.orbit-popup-fallback{margin:14px 0;}
+.orbit-popup-fallback-circle{
+  width:70px;height:70px;margin:0 auto 10px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Spectral', serif;font-size:1.4rem;color:var(--space-black);
+}
+.orbit-popup-fallback-name{
+  font-family:var(--display);font-weight:600;color:var(--starlight);margin:0;
+}
+
+
+/* Coming-soon card override for Lo Music (gold, not the default green glow) */
+.lm-coming-soon-card{
+  border-color:#e8b94d !important;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(232,185,77,0.14), transparent 60%),
+    rgba(232,185,77,0.04) !important;
+  box-shadow:0 0 0 1px rgba(232,185,77,0.15), 0 0 32px -4px rgba(232,185,77,0.45) !important;
+  animation:none !important;
 }

@@ -6,28 +6,457 @@
 <title>Indus Valley</title>
 <meta name="description" content="Indus Valley — a digital mall of stores. Earthy Essentials is now open.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+Devanagari:wght@400;500&family=Cinzel:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
 </head>
 <body>
 <div class="starfield" aria-hidden="true"></div>
+<div class="starfield starfield-mid" aria-hidden="true"></div>
 <div class="starfield starfield-fast" aria-hidden="true"></div>
 
-<div class="landing">
-  <p class="eyebrow landing-title-eyebrow">Indus Valley</p>
-  <h1>A digital mall, under construction</h1>
-  <p style="color:var(--dust);max-width:46ch;">The mall itself is being built. In the meantime, one store is already open for business.</p>
+<section class="iv-story-hero">
+  <p class="mark">a mall built on buried ground</p>
+  <h1 class="iv-brand-heading">Indus Valley <span class="iv-brand-sub iv-sanskrit-sub">(सिन्धु घाटी)</span></h1>
+  <p class="lede">
+    Modern archaeology says five thousand years old. The old stories say older — that what we call the
+    Indus Valley was raised on the bones of a civilization already forgotten. Cities with drainage systems.
+    Standardized weights. A dialect of their own, written in a script that remains undeciphered to this day.
+    And then, without war, without fire, it was simply left behind. Every great trading place eventually
+    becomes a mystery to whoever comes after it. This one, we're building on purpose.
+  </p>
+  <p class="fact-line" id="factLine">The Great Bath at Mohenjo-daro was watertight — built without a single brick out of place.</p>
+  <p class="further-reading">
+    For the deeper rabbit hole: Graham Hancock's <a href="#" target="_blank" rel="noopener">Ancient Apocalypse</a> episode on the Indus is a good place to fall in.
+  </p>
+  <div class="hero-divider"></div>
+</section>
 
-  <div class="stores">
-    <a class="store-card" href="/earthyessentials/">
-      <span class="eyebrow">Now open</span>
-      <img src="/assets/logo-vertical-medium.png" alt="Earthy Essentials" class="store-card-logo">
-      <span class="store-card-cta">Enter the store <span class="store-card-arrow">→</span></span>
-    </a>
+<div class="landing">
+  <h1>More stores to follow</h1>
+
+  <section class="portal-section">
+    <p class="portal-hint">Each star is a store — drag the ring to browse, or tap one directly</p>
+    <div class="portal-stage" id="portalStage">
+      <canvas id="trailCanvas"></canvas>
+      <div class="iv-hub">
+        <div class="hub-stage">
+          <div class="water-core">
+            <div class="ripple"></div>
+            <div class="ripple"></div>
+            <div class="ripple"></div>
+            <div class="script-ring" id="scriptRing"></div>
+            <div class="hub-label"></div>
+          </div>
+        </div>
+      </div>
+      <!-- store nodes injected by JS, positioned via canvas-matched orbit math -->
+    </div>
+
+    <div class="orbit-store-popup" id="orbitPopup" hidden>
+      <button class="orbit-popup-close" id="orbitPopupClose" aria-label="Close">×</button>
+      <span class="eyebrow" id="orbitPopupEyebrow">Now open</span>
+      <img id="orbitPopupLogo" src="" alt="" class="store-card-logo" hidden>
+      <div id="orbitPopupFallback" class="orbit-popup-fallback" hidden>
+        <div class="orbit-popup-fallback-circle" id="orbitPopupFallbackCircle"></div>
+        <p class="orbit-popup-fallback-name" id="orbitPopupFallbackName"></p>
+      </div>
+      <a class="store-card-cta orbit-popup-enter" id="orbitPopupEnter" href="#">Enter the store <span class="store-card-arrow">→</span></a>
+    </div>
+  </section>
+
+  <div class="directory-wrap">
+    <p class="directory-heading">find a store</p>
+
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="storeSearch" placeholder="Search stores…" autocomplete="off">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btnPortal" type="button">Portal view</button>
+      <button class="mode-btn" id="btnAZ" type="button">Browse A–Z</button>
+    </div>
+
+    <div class="az-list" id="azList"></div>
   </div>
 </div>
 
+<script>
+  // ===================== Shared store data + directory (search/A-Z) + portal ring =====================
+  // One combined IIFE, and one single `stores` array feeding all three
+  // consumers (search, A-Z list, orbit ring) — the original design intent
+  // was to never maintain two separate lists by hand, so this keeps that
+  // promise instead of quietly reintroducing the duplication.
+  (function(){
+    var stores = [
+      { name: "Earthy Essentials", sub: "wellness & botanicals", color: "#6E9B5A", accent: "#E8B7C4", url: "/earthyessentials/", initial: "E", logo: "/assets/logo-vertical-medium.png" },
+      { name: "Lo Music", sub: "lessons, repairs, gigs", color: "#B8933F", accent: "#8B6BB0", url: "/lomusic/", initial: "L", comingSoon: true },
+      { name: "Coming Soon", sub: "reserved", url: null, placeholder: true, initial: "?", color: "#6B6B70" },
+      { name: "Coming Soon", sub: "reserved", url: null, placeholder: true, initial: "?", color: "#6B6B70" }
+    ];
+
+    function goToStore(s){
+      if(s.placeholder) return;
+      openStorePopup(s);
+    }
+
+    var popup = document.getElementById('orbitPopup');
+    var popupClose = document.getElementById('orbitPopupClose');
+    var popupEyebrow = document.getElementById('orbitPopupEyebrow');
+    var popupLogo = document.getElementById('orbitPopupLogo');
+    var popupFallback = document.getElementById('orbitPopupFallback');
+    var popupFallbackCircle = document.getElementById('orbitPopupFallbackCircle');
+    var popupFallbackName = document.getElementById('orbitPopupFallbackName');
+    var popupEnter = document.getElementById('orbitPopupEnter');
+
+    function openStorePopup(s){
+      popupEyebrow.textContent = s.comingSoon ? 'Coming soon' : 'Now open';
+      if(s.logo && !s.comingSoon){
+        popupLogo.src = s.logo;
+        popupLogo.alt = s.name;
+        popupLogo.hidden = false;
+        popupFallback.hidden = true;
+      } else {
+        popupLogo.hidden = true;
+        popupFallbackCircle.style.background = s.color;
+        popupFallbackCircle.textContent = s.initial;
+        popupFallbackName.textContent = s.name;
+        popupFallback.hidden = false;
+      }
+      if(s.comingSoon){
+        popupEnter.textContent = 'Under construction — check back soon';
+        popupEnter.removeAttribute('href');
+        popupEnter.style.cursor = 'default';
+      } else {
+        popupEnter.innerHTML = 'Enter the store <span class="store-card-arrow">→</span>';
+        popupEnter.href = s.url;
+        popupEnter.style.cursor = '';
+      }
+      popup.hidden = false;
+      portalPaused = true;
+    }
+    function closeStorePopup(){
+      popup.hidden = true;
+      portalPaused = false;
+    }
+    popupClose.addEventListener('click', closeStorePopup);
+
+    // ---------- live search ----------
+    var searchInput = document.getElementById('storeSearch');
+    var resultsBox = document.getElementById('searchResults');
+    searchInput.addEventListener('input', function(){
+      var q = searchInput.value.trim().toLowerCase();
+      resultsBox.innerHTML = '';
+      if(!q) return;
+      stores
+        .filter(function(s){ return s.name.toLowerCase().indexOf(q) !== -1; })
+        .forEach(function(s){
+          var row = document.createElement('div');
+          row.className = 'search-result';
+          row.innerHTML = '<span class="dot" style="background:' + (s.placeholder ? '#555' : s.color) + '"></span>' +
+            '<span>' + s.name + '</span>' +
+            ((s.placeholder || s.comingSoon) ? '<span class="soon">coming soon</span>' : '');
+          row.addEventListener('click', function(){ goToStore(s); });
+          resultsBox.appendChild(row);
+        });
+    });
+
+    // ---------- A-Z directory, grouped by first letter ----------
+    function renderAZList(){
+      var azListEl = document.getElementById('azList');
+      azListEl.innerHTML = '';
+
+      var sorted = stores.slice().sort(function(a, b){ return a.name.localeCompare(b.name); });
+
+      var currentLetter = null;
+      var groupEl = null;
+
+      sorted.forEach(function(s){
+        var letter = s.name.charAt(0).toUpperCase();
+        if(letter !== currentLetter){
+          currentLetter = letter;
+          groupEl = document.createElement('div');
+          groupEl.className = 'az-group';
+          groupEl.innerHTML = '<div class="az-letter">' + letter + '</div>';
+          azListEl.appendChild(groupEl);
+        }
+        var item = document.createElement('div');
+        item.className = 'az-item' + (s.placeholder ? ' placeholder' : '');
+        item.innerHTML =
+          '<div class="swatch" style="background:' + (s.placeholder ? 'transparent' : s.color) + '">' + s.initial + '</div>' +
+          '<div class="az-item-text">' +
+            '<div class="az-item-name">' + s.name + '</div>' +
+            '<div class="az-item-sub">' + s.sub + '</div>' +
+          '</div>' +
+          (s.placeholder || s.comingSoon ? '<span class="soon-tag">coming soon</span>' : '');
+        item.addEventListener('click', function(){ goToStore(s); });
+        groupEl.appendChild(item);
+      });
+    }
+    renderAZList();
+
+    // ---------- view toggle ----------
+    var btnPortal = document.getElementById('btnPortal');
+    var btnAZ = document.getElementById('btnAZ');
+    var azList = document.getElementById('azList');
+
+    btnAZ.addEventListener('click', function(){
+      btnAZ.classList.add('active');
+      btnPortal.classList.remove('active');
+      azList.classList.add('visible');
+    });
+    btnPortal.addEventListener('click', function(){
+      btnPortal.classList.add('active');
+      btnAZ.classList.remove('active');
+      azList.classList.remove('visible');
+    });
+
+    // ---------- portal ring ----------
+    // Each store follows a real Keplerian ellipse with the hub at the FOCUS
+    // (not the center) — same as an actual orbiting body. Kepler's third law
+    // governs period vs. distance (farther stores genuinely orbit slower, in
+    // the same ratio real planets do), and each store speeds up near the hub
+    // and slows down at the far point of its ellipse.
+    var stage = document.getElementById('portalStage');
+    var canvas = document.getElementById('trailCanvas');
+    var gctx = canvas.getContext('2d');
+
+    var A_BASE = 235;
+    var A_STEP = 18;
+    var ECC = [0.24, 0.34, 0.28, 0.20];
+    var SQUASH = 0.4;
+    var T_BASE = 34;
+    var LOOP_R = 34;
+    var LOOP_N = [3, 2, 4, 3];
+    var LOOP_SPEED = 0.55;
+    var TRAIL_LENGTH = 70;
+
+    var rotationOffset = 0;
+    var tClock = 0;
+    var lastTime = null;
+    var portalPaused = false;
+
+    function eccentricAnomaly(M, e){
+      var E = M;
+      for(var k = 0; k < 5; k++){
+        E = E - (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+      }
+      return E;
+    }
+
+    var nodeEls = stores.map(function(s, i){
+      var node = document.createElement('div');
+      node.className = 'node' + (s.placeholder ? ' placeholder' : '');
+      node.innerHTML = '<div class="node-star" style="--node-color:' + s.color + '"></div>';
+      if(!s.placeholder){
+        node.querySelector('.node-star').addEventListener('click', function(){ goToStore(s); });
+      }
+      stage.appendChild(node);
+
+      s.a = A_BASE + i * A_STEP;
+      s.e = ECC[i % ECC.length];
+      s.period = T_BASE * Math.pow(s.a / A_BASE, 1.5); // Kepler's third law: T^2 proportional to a^3
+      s.phase = i * (2 * Math.PI / stores.length);
+      s.trail = [];
+      return node;
+    });
+
+    function resizeCanvas(){
+      var rect = stage.getBoundingClientRect();
+      var dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      gctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function hexToRgb(hex){
+      var h = hex.replace('#','');
+      var n = parseInt(h.length === 3 ? h.split('').map(function(c){return c+c;}).join('') : h, 16);
+      return [(n>>16)&255, (n>>8)&255, n&255];
+    }
+
+    function portalFrame(timestamp){
+      if(lastTime === null) lastTime = timestamp;
+      var dt = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+
+      if(!isDragging && !portalPaused){
+        tClock += dt;
+      }
+
+      var rect = stage.getBoundingClientRect();
+      var cx = rect.width / 2;
+      var cy = rect.height / 2;
+
+      gctx.clearRect(0, 0, rect.width, rect.height);
+      gctx.globalCompositeOperation = 'lighter';
+
+      stores.forEach(function(s, i){
+        var M = (2 * Math.PI / s.period) * tClock + s.phase;
+        var E = eccentricAnomaly(M, s.e);
+        var xOrb = s.a * (Math.cos(E) - s.e);
+        var yOrb = s.a * Math.sqrt(1 - s.e * s.e) * Math.sin(E);
+
+        var loopN = LOOP_N[i % LOOP_N.length];
+        var loopAngle = tClock * LOOP_SPEED + s.phase;
+        var loopX = LOOP_R * Math.cos(loopN * loopAngle);
+        var loopY = LOOP_R * Math.sin(loopN * loopAngle);
+
+        var cosR = Math.cos(rotationOffset);
+        var sinR = Math.sin(rotationOffset);
+        var rawX = xOrb + loopX;
+        var rawY = yOrb + loopY;
+        var x = rawX * cosR - rawY * sinR;
+        var yFlat = (rawX * sinR + rawY * cosR) * SQUASH;
+
+        var depth = Math.sin(E);
+        var scale = 0.8 + (depth + 1) / 2 * 0.3;
+        var opacity = 0.45 + (depth + 1) / 2 * 0.55;
+
+        var screenX = cx + x;
+        var screenY = cy + yFlat;
+
+        s.trail.push({ x: screenX, y: screenY, o: opacity });
+        if(s.trail.length > TRAIL_LENGTH) s.trail.shift();
+
+        if(s.trail.length > 1){
+          var rgb = hexToRgb(s.color);
+          var baseAlpha = s.placeholder ? 0.35 : 0.85;
+          gctx.shadowColor = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.9)';
+          gctx.shadowBlur = s.placeholder ? 3 : 6;
+          for(var j = 1; j < s.trail.length; j++){
+            var p0 = s.trail[j-1];
+            var p1 = s.trail[j];
+            var alpha = Math.pow(j / s.trail.length, 1.6); // fade in faster near the tail, brighter near the head
+            gctx.beginPath();
+            gctx.moveTo(p0.x, p0.y);
+            gctx.lineTo(p1.x, p1.y);
+            gctx.strokeStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + (alpha * baseAlpha * p1.o) + ')';
+            gctx.lineWidth = 1 + alpha * 2.5;
+            gctx.stroke();
+          }
+          gctx.shadowBlur = 0;
+        }
+
+        var el = nodeEls[i];
+        el.style.transform = 'translate(' + screenX + 'px, ' + screenY + 'px) scale(' + scale + ')';
+        el.style.opacity = opacity.toFixed(2);
+        el.style.zIndex = Math.round(depth * 1000);
+      });
+
+      gctx.globalCompositeOperation = 'source-over';
+      requestAnimationFrame(portalFrame);
+    }
+    requestAnimationFrame(portalFrame);
+
+    // ---------- drag to rotate ----------
+    var isDragging = false;
+    var startX = 0;
+    var startOffset = 0;
+
+    function pointerDown(x){
+      isDragging = true;
+      startX = x;
+      startOffset = rotationOffset;
+      stage.classList.add('dragging');
+    }
+    function pointerMove(x){
+      if(!isDragging) return;
+      var delta = (x - startX) * 0.006;
+      rotationOffset = startOffset + delta;
+    }
+    function pointerUp(){
+      isDragging = false;
+      stage.classList.remove('dragging');
+    }
+
+    stage.addEventListener('mousedown', function(e){ pointerDown(e.clientX); });
+    window.addEventListener('mousemove', function(e){ pointerMove(e.clientX); });
+    window.addEventListener('mouseup', pointerUp);
+
+    stage.addEventListener('touchstart', function(e){ pointerDown(e.touches[0].clientX); }, {passive:true});
+    window.addEventListener('touchmove', function(e){ pointerMove(e.touches[0].clientX); }, {passive:true});
+    window.addEventListener('touchend', pointerUp);
+  })();
+
+  // ===================== Story hero: rotating Indus Valley facts =====================
+  // Own IIFE — facts/factIndex/factEl can't collide with the hub script's names
+  // (pool/rand/chosen/ring/etc.) or anything added later.
+  (function(){
+    var facts = [
+      "The Great Bath at Mohenjo-daro was watertight — built without a single brick out of place.",
+      "Indus Valley seals turn up in Mesopotamia, over 2,000 km away — this was a trading civilization.",
+      "No palaces, no obvious king's tomb has ever been found here — historians still argue about who was in charge.",
+      "The script on Indus seals remains undeciphered to this day.",
+      "Cities here had covered drains under nearly every street — centuries before Rome's.",
+      "The Indus script is older than Egyptian hieroglyphs and Mesopotamian cuneiform — and after a century of trying, no one has read a word of it.",
+      "Harappa alone had roughly 700 wells — clean water wasn't a luxury here, it was basic infrastructure.",
+      "There's now a $1 million prize on offer for whoever finally cracks the Indus script."
+    ];
+    var factIndex = 0;
+    var factEl = document.getElementById('factLine');
+    setInterval(function(){
+      factIndex = (factIndex + 1) % facts.length;
+      factEl.style.opacity = 0;
+      setTimeout(function(){
+        factEl.textContent = facts[factIndex];
+        factEl.style.opacity = 1;
+      }, 400);
+    }, 5000);
+  })();
+
+  // ===================== Center hub: daily Sanskrit ring =====================
+  // Wrapped in its own IIFE so pool/rand/chosen/ring/etc. can never collide
+  // with variable names in any other script block on this page.
+  (function(){
+    var pool = [
+      'अ','आ','इ','ई','उ','ऊ','ऋ','ए','ऐ','ओ','औ',
+      'क','ख','ग','घ','च','छ','ज','झ','ट','ठ','ड','ढ',
+      'ण','त','थ','द','ध','न','प','फ','ब','भ','म',
+      'य','र','ल','व','श','ष','स','ह'
+    ];
+
+    var GLYPH_COUNT = 12;
+
+    function todaySeed(){
+      var d = new Date();
+      return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
+    }
+
+    function mulberry32(seed){
+      return function(){
+        seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    var rand = mulberry32(todaySeed());
+    var chosen = [];
+    var poolCopy = pool.slice();
+    for(var i = 0; i < GLYPH_COUNT; i++){
+      var idx = Math.floor(rand() * poolCopy.length);
+      chosen.push(poolCopy.splice(idx, 1)[0]);
+    }
+
+    var ring = document.getElementById('scriptRing');
+    chosen.forEach(function(ch, i){
+      var angle = (360 / GLYPH_COUNT) * i;
+      var g = document.createElement('div');
+      g.className = 'glyph';
+      g.style.transform = 'rotate(' + angle + 'deg)';
+      g.textContent = ch;
+      ring.appendChild(g);
+    });
+  })();
+</script>
 </body>
 </html>
