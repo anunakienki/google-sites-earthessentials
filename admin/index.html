@@ -63,6 +63,63 @@
       <button type="submit" class="btn primary" id="promoSubmit">Save special</button>
       <p class="form-msg" id="promoMsg" hidden></p>
     </form>
+
+    <div style="margin-top:56px;padding-top:40px;border-top:1px solid var(--hairline);">
+      <p class="eyebrow">Stores</p>
+      <h1 style="font-family:var(--display);font-size:2rem;margin-bottom:8px;">Manage stores</h1>
+      <p style="color:var(--dust);">Add a store, edit its details, or toggle it live/coming-soon — no code changes needed. The mall's portal ring, search, and A-Z list update automatically.</p>
+
+      <div id="storeList" style="margin-top:28px;display:flex;flex-direction:column;gap:12px;"></div>
+
+      <button type="button" class="btn" id="addStoreBtn" style="width:100%;margin-top:16px;">+ Add a new store</button>
+    </div>
+
+    <div class="orbit-store-popup" id="storeEditModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;max-width:90vw;z-index:900;text-align:left;" hidden>
+      <button class="orbit-popup-close" id="storeEditClose" aria-label="Close">×</button>
+      <p class="eyebrow" style="margin-bottom:16px;">Store details</p>
+      <form id="storeEditForm" class="member-form">
+        <input type="hidden" id="storeEditId">
+        <div class="form-field">
+          <label for="storeEditName">Name</label>
+          <input type="text" id="storeEditName" required>
+        </div>
+        <div class="form-field">
+          <label for="storeEditSub">One-line description</label>
+          <input type="text" id="storeEditSub">
+        </div>
+        <div class="form-field">
+          <label for="storeEditUrl">URL path (e.g. /relicandink/)</label>
+          <input type="text" id="storeEditUrl">
+        </div>
+        <div class="form-field">
+          <label for="storeEditLogo">Logo image path (optional — leave blank to use a colored initial instead)</label>
+          <input type="text" id="storeEditLogo" placeholder="/assets/logo-vertical-medium.png">
+        </div>
+        <div class="form-field">
+          <label for="storeEditColor">Color</label>
+          <input type="color" id="storeEditColor" style="width:100%;height:44px;padding:4px;background:var(--space-black);border:1px solid var(--hairline);border-radius:10px;">
+        </div>
+        <div class="form-field">
+          <label for="storeEditInitial">Initial letter (shown if no logo)</label>
+          <input type="text" id="storeEditInitial" maxlength="2">
+        </div>
+        <div class="form-field">
+          <label for="storeEditStatus">Status</label>
+          <select id="storeEditStatus" style="width:100%;background:var(--space-black);border:1px solid var(--hairline);border-radius:10px;padding:12px 14px;color:var(--starlight);font-family:var(--body);font-size:0.95rem;">
+            <option value="live">Live</option>
+            <option value="coming-soon">Coming soon</option>
+            <option value="planning">Planning (hidden from mall)</option>
+          </select>
+        </div>
+        <label class="consent-row" style="margin:0 0 20px;">
+          <input type="checkbox" id="storeEditAgeRestricted">
+          <span>Age-restricted (needs the age + membership gate)</span>
+        </label>
+        <button type="submit" class="btn primary" id="storeEditSave" style="width:100%;">Save store</button>
+        <button type="button" class="btn" id="storeEditDelete" style="width:100%;margin-top:8px;color:var(--plasma-pink);">Delete this store</button>
+        <p class="form-msg" id="storeEditMsg" hidden></p>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -150,6 +207,123 @@
           btn.disabled = false;
           btn.textContent = 'Save special';
         });
+    });
+  })();
+
+  // ===================== Store management =====================
+  (function(){
+    var adminPinField = document.getElementById('adminPin');
+    var storeListEl = document.getElementById('storeList');
+    var editModal = document.getElementById('storeEditModal');
+    var editForm = document.getElementById('storeEditForm');
+
+    function currentPin(){ return adminPinField.value.trim(); }
+
+    function loadStores(){
+      storeListEl.innerHTML = 'Loading…';
+      fetch(APPS_SCRIPT_URL + '?action=getStores')
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          renderStoreList(data.stores || []);
+        })
+        .catch(function(){
+          storeListEl.innerHTML = '<p style="color:var(--plasma-pink);">Could not load stores — check your connection.</p>';
+        });
+    }
+
+    function renderStoreList(stores){
+      storeListEl.innerHTML = '';
+      stores.sort(function(a, b){ return (a.order||0) - (b.order||0); });
+      stores.forEach(function(s){
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:14px;border:1px solid var(--hairline);border-radius:12px;padding:14px 16px;background:var(--nebula-violet);cursor:pointer;';
+        row.innerHTML =
+          '<div style="width:34px;height:34px;border-radius:50%;background:' + s.color + ';flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);color:#0A0B10;">' + s.initial + '</div>' +
+          '<div style="flex:1;">' +
+            '<div style="font-weight:600;color:var(--starlight);">' + s.name + '</div>' +
+            '<div style="font-size:0.82rem;color:var(--dust);">' + s.sub + ' · ' + s.status + '</div>' +
+          '</div>';
+        row.addEventListener('click', function(){ openEditModal(s); });
+        storeListEl.appendChild(row);
+      });
+    }
+
+    function openEditModal(s){
+      document.getElementById('storeEditId').value = s.id || '';
+      document.getElementById('storeEditName').value = s.name || '';
+      document.getElementById('storeEditSub').value = s.sub || '';
+      document.getElementById('storeEditUrl').value = s.url || '';
+      document.getElementById('storeEditLogo').value = s.logo || '';
+      document.getElementById('storeEditColor').value = s.color || '#999999';
+      document.getElementById('storeEditInitial').value = s.initial || '';
+      document.getElementById('storeEditStatus').value = s.status || 'coming-soon';
+      document.getElementById('storeEditAgeRestricted').checked = !!s.ageRestricted;
+      document.getElementById('storeEditMsg').hidden = true;
+      editModal.hidden = false;
+    }
+
+    document.getElementById('addStoreBtn').addEventListener('click', function(){
+      openEditModal({ id: '', name: '', sub: '', url: '', logo: '', color: '#999999', initial: '', status: 'coming-soon', ageRestricted: false, order: 99 });
+    });
+    document.getElementById('storeEditClose').addEventListener('click', function(){ editModal.hidden = true; });
+    document.getElementById('storeEditDelete').addEventListener('click', function(){
+      var id = document.getElementById('storeEditId').value;
+      if(!id){ editModal.hidden = true; return; }
+      if(!confirm('Delete this store? This cannot be undone.')) return;
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'deleteStore', pin: currentPin(), id: id })
+      })
+        .then(function(res){ return res.json(); })
+        .then(function(){ editModal.hidden = true; loadStores(); });
+    });
+
+    editForm.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var msg = document.getElementById('storeEditMsg');
+      var idField = document.getElementById('storeEditId');
+      var name = document.getElementById('storeEditName').value.trim();
+      var id = idField.value || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+      var payload = {
+        action: 'saveStore',
+        pin: currentPin(),
+        id: id,
+        name: name,
+        sub: document.getElementById('storeEditSub').value,
+        url: document.getElementById('storeEditUrl').value,
+        logo: document.getElementById('storeEditLogo').value,
+        color: document.getElementById('storeEditColor').value,
+        initial: document.getElementById('storeEditInitial').value || name.charAt(0).toUpperCase(),
+        status: document.getElementById('storeEditStatus').value,
+        ageRestricted: document.getElementById('storeEditAgeRestricted').checked
+      };
+
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      })
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.success){
+            editModal.hidden = true;
+            loadStores();
+          } else {
+            msg.hidden = false;
+            msg.textContent = data.error === 'Invalid admin PIN' ? 'Wrong PIN.' : "Couldn't save — try again.";
+          }
+        })
+        .catch(function(){
+          msg.hidden = false;
+          msg.textContent = "Couldn't save — check your connection.";
+        });
+    });
+
+    // Load once the PIN screen is passed.
+    document.getElementById('pinSubmit').addEventListener('click', function(){
+      setTimeout(loadStores, 50); // small delay so this runs after the existing pin-submit handler shows adminApp
     });
   })();
 </script>

@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chronicles of the Herb — Indus Valley</title>
+<meta name="description" content="Chronicles of the Herb — wellness and herbal supplements, part of the Indus Valley digital mall.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="starfield" aria-hidden="true"></div>
+<div class="starfield starfield-mid" aria-hidden="true"></div>
+<div class="starfield starfield-fast" aria-hidden="true"></div>
+
+<!-- ===================== STAGE 1: AGE VERIFICATION ===================== -->
+<section class="gate-screen" id="gateAge">
+  <div class="gate-card">
+    <p class="eyebrow" style="color:#4FA88A;">Transmission 1 of 2 — Verification</p>
+    <h1>Are you 18 or older?</h1>
+    <p>Chronicles of the Herb sells wellness and herbal supplement products. Please confirm your age before we let you aboard.</p>
+    <div class="gate-actions">
+      <button class="btn" id="ageNo">No</button>
+      <button class="btn primary" id="ageYes">Yes, I'm 18+</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STAGE 2: MEMBERSHIP & VERIFICATION ===================== -->
+<section class="gate-screen" id="gateMember" hidden>
+  <div class="gate-card gate-card--wide">
+    <p class="eyebrow" style="color:#4FA88A;">Transmission 2 of 2 — Membership</p>
+    <h1>Join the crew</h1>
+    <p>New to the mall? Fill in the membership form below — this same account works across every store, including this one. Already a member elsewhere in the mall? You may already be verified — try refreshing, or enter your code below.</p>
+
+    <form id="membershipForm" class="member-form">
+      <div class="form-field">
+        <label for="mfName">Full name</label>
+        <input type="text" id="mfName" name="name" required autocomplete="name">
+      </div>
+      <div class="form-field">
+        <label for="mfEmail">Email address</label>
+        <input type="email" id="mfEmail" name="email" required autocomplete="email">
+      </div>
+      <div class="form-field">
+        <label for="mfPhone">Phone number</label>
+        <input type="tel" id="mfPhone" name="phone" autocomplete="tel">
+      </div>
+
+      <fieldset class="form-field">
+        <legend>Are you 18 years or older?</legend>
+        <label class="radio-option"><input type="radio" name="ageConfirm" value="yes" required> Yes</label>
+        <label class="radio-option"><input type="radio" name="ageConfirm" value="no"> No</label>
+      </fieldset>
+      <p class="age-block-msg" id="ageBlockMsg" hidden>You must be 18 or older to join. Come back when you're 18 — see you then 🌙</p>
+
+      <label class="consent-row">
+        <input type="checkbox" id="mfConsent" required>
+        <span>I confirm I am 18 or older, the details above are accurate, and I agree to the mall's <button type="button" class="linklike-inline" id="disclaimerToggle">membership terms &amp; disclaimer</button>.</span>
+      </label>
+
+      <div class="disclaimer-box" id="disclaimerBox" hidden>
+        <h4>Membership Terms &amp; Disclaimer</h4>
+        <p>This membership form is provided for the purpose of joining the Indus Valley mall as a private members' club, granting access to every age-restricted store within it. By submitting this form, you confirm that you are 18 years of age or older, and that all details you have provided are true and accurate to the best of your knowledge.</p>
+        <p>Membership is intended for personal, private, and responsible use in accordance with applicable law. Chronicles of the Herb does not encourage or condone unlawful use, sale, or distribution of any product. It remains the member's responsibility to understand and comply with the laws applicable to them in their jurisdiction.</p>
+        <p>Your information is used solely to manage your membership, verify your age, and communicate with you about your membership and any associated benefits. It will not be sold to third parties.</p>
+        <p>Membership may be declined or revoked at the discretion of the mall.</p>
+      </div>
+
+      <button type="submit" class="btn primary" id="memberSubmitBtn">Join the Club</button>
+      <p class="form-msg" id="formMsg" hidden></p>
+    </form>
+
+    <div id="membershipSuccess" hidden>
+      <p class="eyebrow">Welcome</p>
+      <h2>You're in the club 🖖</h2>
+      <p style="color:var(--dust);">Check your email for your access code, then enter it below.</p>
+    </div>
+
+    <div class="access-code-block">
+      <label for="accessCodeInput">Access code</label>
+      <div class="access-code-row">
+        <input type="text" id="accessCodeInput" placeholder="Enter the code from your verification email" autocomplete="off">
+        <button class="btn primary" id="accessCodeSubmit">Enter store</button>
+      </div>
+      <p class="access-code-msg" id="accessCodeMsg" hidden></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STAGE 3: STORE ===================== -->
+<div id="storeApp" hidden>
+  <header class="site">
+    <div class="wrap nav-row">
+      <a class="brand" href="#top" style="font-family:var(--display);font-size:1.4rem;font-weight:700;color:#4FA88A;text-decoration:none;">Chronicles of the Herb</a>
+      <nav class="header-links">
+        <a class="back-link" href="/">← Indus Valley</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="landing" style="min-height:60vh;justify-content:center;">
+    <p class="eyebrow" style="color:#4FA88A;">Verified — welcome in</p>
+    <h1 style="font-family:var(--display);font-size:clamp(2rem,6vw,3rem);color:var(--starlight);margin:8px 0 16px;">Coming soon</h1>
+    <p style="color:var(--dust);max-width:46ch;">Wellness and herbal supplements — the full store is still being built. You're verified and ready for when it opens.</p>
+  </div>
+</div>
+
+<script>
+  // Paste your deployed Apps Script Web App URL here once you've set it up
+  // (see DEPLOY_INSTRUCTIONS.md). Shared across every gate/promo function below.
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYl6u9whFo-Feo1aczUheKbd3rLkEs0ZjsCzrJ6P5FfqUs3s2kt-ZUOWNzQbq3-hpCgg/exec';
+
+  (function(){
+    var gateAge = document.getElementById('gateAge');
+    var gateMember = document.getElementById('gateMember');
+    var storeApp = document.getElementById('storeApp');
+
+    // Same Apps Script URL used across every gate/promo function on this page.
+
+    function showStore(){
+      gateAge.hidden = true;
+      gateMember.hidden = true;
+      storeApp.hidden = false;
+    }
+    function showMemberGate(){
+      gateAge.hidden = true;
+      gateMember.hidden = false;
+    }
+
+    var ageOk, memberOk;
+    try{
+      ageOk = localStorage.getItem('ee_age_ok') === '1';
+      memberOk = localStorage.getItem('ee_member_ok') === '1';
+    }catch(e){ ageOk = false; memberOk = false; }
+
+    if(ageOk && memberOk){
+      showStore();
+    } else if(ageOk){
+      showMemberGate();
+    } // else: default state already shows gateAge
+
+    document.getElementById('ageYes').addEventListener('click', function(){
+      try{ localStorage.setItem('ee_age_ok','1'); }catch(e){}
+      showMemberGate();
+    });
+    document.getElementById('ageNo').addEventListener('click', function(){
+      window.location.href = 'https://www.google.com';
+    });
+
+    // ---- Membership form: age-radio guard ----
+    var ageRadios = document.querySelectorAll('input[name="ageConfirm"]');
+    var ageBlockMsg = document.getElementById('ageBlockMsg');
+    var memberSubmitBtn = document.getElementById('memberSubmitBtn');
+    ageRadios.forEach(function(radio){
+      radio.addEventListener('change', function(){
+        if(radio.value === 'no' && radio.checked){
+          ageBlockMsg.hidden = false;
+          memberSubmitBtn.disabled = true;
+        } else if(radio.value === 'yes' && radio.checked){
+          ageBlockMsg.hidden = true;
+          memberSubmitBtn.disabled = false;
+        }
+      });
+    });
+
+    // ---- Disclaimer toggle ----
+    document.getElementById('disclaimerToggle').addEventListener('click', function(){
+      var box = document.getElementById('disclaimerBox');
+      box.hidden = !box.hidden;
+    });
+
+    // ---- Membership form submit ----
+    document.getElementById('membershipForm').addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var formMsg = document.getElementById('formMsg');
+      formMsg.hidden = true;
+
+      var ageValue = document.querySelector('input[name="ageConfirm"]:checked');
+      if(!ageValue || ageValue.value !== 'yes'){
+        formMsg.hidden = false;
+        formMsg.textContent = 'You must confirm you are 18 or older to join.';
+        return;
+      }
+      if(!document.getElementById('mfConsent').checked){
+        formMsg.hidden = false;
+        formMsg.textContent = 'Please agree to the membership terms to continue.';
+        return;
+      }
+
+      var payload = {
+        name: document.getElementById('mfName').value,
+        email: document.getElementById('mfEmail').value,
+        phone: document.getElementById('mfPhone').value
+      };
+
+      memberSubmitBtn.disabled = true;
+      memberSubmitBtn.textContent = 'Joining…';
+
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
+        body: JSON.stringify(payload)
+      })
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.success){
+            document.getElementById('membershipForm').hidden = true;
+            document.getElementById('membershipSuccess').hidden = false;
+          } else {
+            throw new Error('Signup failed');
+          }
+        })
+        .catch(function(){
+          formMsg.hidden = false;
+          formMsg.textContent = "Something went wrong submitting the form — check your connection and try again.";
+        })
+        .finally(function(){
+          memberSubmitBtn.disabled = false;
+          memberSubmitBtn.textContent = 'Join the Club';
+        });
+    });
+
+    // ---- Access code: validated live against the Apps Script sheet ----
+    function tryAccessCode(){
+      var input = document.getElementById('accessCodeInput');
+      var msg = document.getElementById('accessCodeMsg');
+      var btn = document.getElementById('accessCodeSubmit');
+      var entered = (input.value || '').trim().toUpperCase();
+
+      if(!entered){ return; }
+
+      // Staff/emergency access code — always works, doesn't touch the sheet.
+      // Keep this for testing and in-store staff emergency access.
+      if(entered === 'EARTHY-2026'){
+        try{ localStorage.setItem('ee_member_ok','1'); }catch(e){}
+        showStore();
+        return;
+      }
+
+      msg.hidden = true;
+      btn.disabled = true;
+      btn.textContent = 'Checking…';
+
+      fetch(APPS_SCRIPT_URL + '?action=validate&code=' + encodeURIComponent(entered))
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(data.valid){
+            try{ localStorage.setItem('ee_member_ok','1'); }catch(e){}
+            try{ localStorage.setItem('ee_last_code', entered); }catch(e){}
+            showStore();
+                } else {
+            msg.hidden = false;
+            msg.textContent = "That code wasn't recognized. Make sure you've submitted the form above and wait for your verification email.";
+          }
+        })
+        .catch(function(){
+          msg.hidden = false;
+          msg.textContent = "Couldn't check that code right now — check your connection and try again.";
+        })
+        .finally(function(){
+          btn.disabled = false;
+          btn.textContent = 'Enter store';
+        });
+    }
+    document.getElementById('accessCodeSubmit').addEventListener('click', tryAccessCode);
+    document.getElementById('accessCodeInput').addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ tryAccessCode(); }
+    });
+  })();
+</script>
+</body>
+</html>
