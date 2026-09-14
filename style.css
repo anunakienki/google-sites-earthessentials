@@ -817,6 +817,22 @@ footer.site a{color:var(--bio-green);text-decoration:none;}
 .lm-payment-card p:first-child{color:var(--lm-gold);font-family:var(--display);}
 .lm-payment-line span{color:var(--dust);}
 
+.lm-pop-card{
+  margin-top:16px;
+  border:1px dashed var(--hairline);
+  border-radius:14px;
+  padding:20px 22px;
+  background:rgba(255,255,255,0.02);
+  max-width:440px;
+}
+.lm-pop-title{font-family:var(--display);color:var(--starlight);margin:0 0 6px;font-weight:600;}
+.lm-pop-text{color:var(--dust);font-size:0.9rem;margin:0 0 14px;}
+.lm-pop-links{display:flex;flex-direction:column;gap:8px;}
+.lm-pop-link{
+  color:var(--bio-green);text-decoration:none;font-size:0.92rem;
+}
+.lm-pop-link:hover{text-decoration:underline;}
+
 .lm-note{
   margin-top:14px;font-size:0.82rem;color:var(--plasma-pink);
 }
