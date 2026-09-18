@@ -1277,3 +1277,99 @@ footer.site a{color:var(--bio-green);text-decoration:none;}
   box-shadow:0 0 0 1px rgba(232,185,77,0.15), 0 0 32px -4px rgba(232,185,77,0.45) !important;
   animation:none !important;
 }
+
+/* ============================================================
+   Generic store page components — reused across any new store
+   (Relic & Ink, Earth Forge 3D, Chronicles of the Herb, and any
+   future one). Each store sets its own --store-accent on <body>
+   to recolor everything here without duplicating CSS per store.
+   ============================================================ */
+.sp-header{padding:20px 0;}
+.sp-brand{
+  font-family:var(--display);font-weight:700;font-size:1.3rem;
+  color:var(--starlight);text-decoration:none;
+}
+.sp-brand-accent{color:var(--store-accent, var(--bio-green));}
+
+.sp-hero{padding:40px 0 24px;text-align:center;}
+.sp-hero-eyebrow{color:var(--store-accent, var(--bio-green));}
+.sp-hero h1{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(2.2rem,6vw,3.4rem);
+  margin:8px 0 16px;
+  color:var(--starlight);
+}
+.sp-hero p.sp-tagline{color:var(--dust);max-width:60ch;margin:0 auto;}
+
+.sp-section{padding:48px 0 0;border-top:1px solid var(--hairline);margin-top:24px;}
+.sp-section h2{font-family:var(--display);font-size:1.6rem;margin:6px 0 10px;}
+.sp-section-lede{color:var(--dust);max-width:60ch;}
+
+.sp-grid{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:16px;
+}
+.sp-card{
+  border:1px solid var(--hairline);
+  border-radius:14px;
+  padding:22px 24px;
+  background:
+    radial-gradient(circle at 20% 15%, color-mix(in srgb, var(--store-accent, var(--bio-green)) 12%, transparent), transparent 60%),
+    var(--nebula-violet);
+}
+.sp-card h3{
+  font-family:var(--display);font-size:1.05rem;margin:0 0 8px;
+  color:var(--store-accent, var(--bio-green));
+}
+.sp-card p{margin:0;color:var(--dust);font-size:0.92rem;max-width:none;}
+
+.sp-payment-card{
+  margin-top:20px;
+  border:1px solid var(--hairline);
+  border-radius:14px;
+  padding:24px 28px;
+  background:var(--nebula-violet);
+  max-width:440px;
+}
+.sp-payment-card p{margin:0 0 8px;color:var(--starlight);}
+.sp-payment-card p:first-child{color:var(--store-accent, var(--bio-green));font-family:var(--display);}
+.sp-payment-line span{color:var(--dust);}
+
+.sp-pop-card{
+  margin-top:16px;
+  border:1px dashed var(--hairline);
+  border-radius:14px;
+  padding:20px 22px;
+  background:rgba(255,255,255,0.02);
+  max-width:440px;
+}
+.sp-pop-title{font-family:var(--display);color:var(--starlight);margin:0 0 6px;font-weight:600;}
+.sp-pop-text{color:var(--dust);font-size:0.9rem;margin:0 0 14px;}
+.sp-pop-links{display:flex;flex-direction:column;gap:8px;}
+.sp-pop-link{color:var(--store-accent, var(--bio-green));text-decoration:none;font-size:0.92rem;}
+.sp-pop-link:hover{text-decoration:underline;}
+
+.sp-note{margin-top:14px;font-size:0.82rem;color:var(--plasma-pink);}
+
+/* Product card thumbnail — used where a real per-product photo exists */
+.product-card-photo{
+  width:100%;aspect-ratio:1/1;object-fit:cover;
+  border-radius:8px;margin-bottom:10px;background:#fff;
+}
+
+/* ---------------- Gaia welcome video (portrait format) ---------------- */
+.gaia-welcome{
+  display:flex;justify-content:center;
+  margin:28px 0 40px;
+}
+.gaia-welcome-video{
+  width:100%;
+  max-width:280px;
+  aspect-ratio:9/16;
+  border-radius:16px;
+  border:1px solid var(--hairline);
+  background:#000;
+  box-shadow:0 0 32px -6px rgba(124,255,178,0.25);
+}
